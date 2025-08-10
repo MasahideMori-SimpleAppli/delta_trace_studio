@@ -1,0 +1,68 @@
+(split, wt:1, barSize:6, pAll:8)
++(row)
+++(split, wt:1, axis:vertical, barSize:4, elevation:0.0)
++++(col, w:Infinity)
+++++(row, bgColor:teal[200], pB:16, pL:8, pR:8)
++++++(h4, mT:12)Query Builder
+++++(scroll, wt:1)
++++++(col)
+++++++(row, vAlign:center, pL:8, pR:8)
++++++++(text, mT:4, mR:8)Query Mode:
++++++++(dropdownBtn, sid:queryMode, mT:6)
+++++++++(menu)Normal
+++++++++(menu)Transaction
+++++++(line)
+++++++(block, sid:queryBlock)
++++++++(col)
+++++++++(row, vAlign:center, hAlign:left, pL:8, pR:8)
++++++++++(tf, wt:1, mR:8, labelText:Collection\ Name, sid:collectionName)
++++++++++(text, mT:4, mR:8)Query Type:
++++++++++(dropdownBtn, sid:queryType, mT:6)
+++++++++++(menu)add
+++++++++++(menu)update
+++++++++++(menu)updateOne
+++++++++++(menu)delete
+++++++++++(menu)deleteOne
+++++++++++(menu)search
+++++++++++(menu)getAll
+++++++++++(menu)conformToTemplate
+++++++++++(menu)renameField
+++++++++++(menu)count
+++++++++++(menu)clear
+++++++++++(menu)clearAdd
++++++++++(block, sid:queryInput)
+++++(row, hAlign:center, mT:8, mB:12)
++++++(btn, w:320, type:outlined, textColor:null, sid:runQuery)Run query
++++(col, w:Infinity, pT:4)
+++++(row, bgColor:teal[200], pB:16, pL:8, pR:8)
++++++(h4, mT:12, elevation:0.0)Query Result
+++++(scroll, wt:1)
++++++(col)
+++++++(text, sid:queryResult)This is where the query results will go.
+++(block, w:4, elevation:0.0, bgColor:#f4fbf8)
++(col, pL:4, elevation:0.0, bgColor:#f4fbf8)
+++(row, bgColor:teal[200], pB:6, pL:8, pR:8)
++++(h4, wt:1, mT:12)DB Data
++++(text, mT:15, mR:8)View mode:
++++(dropdownBtn, sid:viewMode, mT:6)
+++++(menu)List
+++++(menu)Tree
+++++(menu)Log
+++(scroll, wt:1, w:Infinity)
++++(block, sid:dbView)
+++++(col)
++++++(row, vAlign:center, hAlign:center, bgColor:teal[50], pT:4, pB:4)
+++++++(titleM, pL:8, pR:8)Tree is a simple display mode 
+for understanding the data structure.
+++++++(titleM, mR:8)Samples:
+++++++(dropdownBtn, sid:samplingNum)
++++++++(menu)1
++++++++(menu)2
++++++++(menu)3
+// TreeView
++++++(text, mT:2, pAll:8)📂 users
+   ├─ #1 { "id": 1, "name": "Alice", ... }
+   ├─ #2 { "id": 2, "name": "Bob", ... }
+📂 orders
+   ├─ #1 { "orderId": "A123", "items": ... }
+   ├─ #2 { ... }
