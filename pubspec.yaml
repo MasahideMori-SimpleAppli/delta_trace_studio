@@ -19,7 +19,7 @@ dependencies:
   simple_widget_markup: ^43.0.3
   simple_managers: any
   simple_locale: any
-  delta_trace_db: ^0.0.9
+  delta_trace_db: ^0.0.11
 
   # other packages
   url_launcher: ^6.1.5
@@ -35,6 +35,7 @@ flutter:
 
   assets:
     - assets/layout/en/main_page/any/main_page.spwml
+    - assets/layout/en/main_page/any/q_add.spwml
 
   fonts:
     - family: Noto Sans JP

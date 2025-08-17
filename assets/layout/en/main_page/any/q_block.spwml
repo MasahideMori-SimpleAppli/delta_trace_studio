@@ -1,0 +1,16 @@
+(row, vAlign:center, hAlign:left, pL:8, pR:8)
++(text, mT:4, mR:8)Query Type:
++(dropdownBtn2, sid:queryType, mT:6)
+++(menu, tag:add)add
+++(menu, tag:update)update
+++(menu, tag:updateOne)updateOne
+++(menu, tag:delete)delete
+++(menu, tag:deleteOne)deleteOne
+++(menu, tag:search)search
+++(menu, tag:getAll)getAll
+++(menu, tag:conformToTemplate)conformToTemplate
+++(menu, tag:renameField)renameField
+++(menu, tag:count)count
+++(menu, tag:clear)clear
+++(menu, tag:clearAdd)clearAdd
+(block, sid:queryInput)
