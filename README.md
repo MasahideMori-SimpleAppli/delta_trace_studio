@@ -1,6 +1,6 @@
 # delta_trace_studio
 
-* This project is under construction.  
+*The query editor is currently under construction.
 
 (en)Japanese ver is [here](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md).  
 (ja)この解説の日本語版は[ここ](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md)にあります。  

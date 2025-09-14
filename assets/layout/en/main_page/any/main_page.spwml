@@ -2,51 +2,50 @@
 +(row)
 ++(split, wt:1, axis:vertical, barSize:4, elevation:0.0, sid:split2)
 +++(col, w:Infinity)
-++++(row, bgColor:teal[200], pB:16, pL:8, pR:8)
-+++++(h4, mT:12)Query Builder
-++++(col)
-+++++(row, vAlign:center, hAlign:center, pL:8, pR:8)
-++++++(text, mT:4, mR:8)Query Mode:
-++++++(dropdownBtn2, sid:queryMode, mT:6)
-+++++++(menu, tag:Normal)Normal
-+++++++(menu, tag:Transaction)Transaction
-++++++(btn, type:elevated, textColor:null, iconNum:0xe047, mL:12, mT:12, sid:addQuery)Add
-++++++(btn, type:elevated, textColor:null, iconNum:0xe168, mL:8, mT:12, sid:clearQuery)Clear
-+++++(line)
-++++(scroll, wt:1)
-+++++(col, sid:queryList)
+++++(row, bgColor:teal[200], pL:8, pR:8, pT:6, pB:6, vAlign:center)
++++++(h4, mT:0, mB:4, wt:1)Query Builder
++++++(dropdownBtn2, sid:queryMode)
+//++++++(menu, tag:Normal)Normal
+//++++++(menu, tag:Transaction)Transaction
+++++++(menu, tag:Json)Json
+//+++++(btn, type:icon, iconNum:0xe047, mL:12, sid:addQuery)Add
+//+++++(btn, type:icon, iconNum:0xe168, mL:8, sid:clearQuery)Clear
+++++(block, wt:1, sid:queryView)
 ++++(line)
 ++++(row, hAlign:center, mT:8, mB:12)
 +++++(btn, type:outlined, mR:12,  textColor:null, sid:runQuery)Run query
-+++++(btn, type:outlined, textColor:null, sid:convertCode)Convert Code
+//+++++(btn, type:outlined, textColor:null, sid:convertDart)Convert Dart
 +++(col, w:Infinity, pT:4)
-++++(row, bgColor:teal[200], pB:16, pL:8, pR:8)
-+++++(h4, mT:12, elevation:0.0)Query Result
+++++(row, bgColor:teal[200], pL:8, pR:8, pT:12, pB:12, vAlign:center)
++++++(h4, mT:0, mB:4, elevation:0.0)Result
++++++(block, wt:1)
++++++(btn, type:icon, iconNum:0xef7f, mR:8, sid:resultCopy)
 ++++(scroll, wt:1)
-+++++(col)
++++++(col, pAll:8)
 ++++++(text, sid:queryResult)This is where the query results will go.
 ++(block, w:4, elevation:0.0)
 +(col, pL:4, elevation:0.0)
-++(row, bgColor:teal[200], pB:6, pL:8, pR:8)
-+++(h4, wt:1, mT:12)DB Data
-+++(text, mT:15, mR:8)View mode:
-+++(dropdownBtn, sid:viewMode, mT:6)
-++++(menu)List
+++(row, bgColor:teal[200], pL:8, pR:8, pT:6, pB:6, vAlign:center)
++++(h4, wt:1, mT:0, mB:4)DB Data
++++(text, mT:0, mR:8)View mode:
++++(dropdownBtn, sid:viewMode)
 ++++(menu)Tree
+++++(menu)List
 ++++(menu)Log
-++(scroll, wt:1, w:Infinity)
-+++(block, sid:dbView)
-++++(col)
-+++++(row, vAlign:center, hAlign:center, pT:4, pB:4)
-++++++(titleM, pL:8, pR:8)Tree is a simple display mode 
++++(btn, type:icon, iconNum:0xf05d, mL:8, mR:8, sid:importDB)importDB
++++(btn, type:icon, iconNum:0xf05b, sid:exportDB)exportDB
+++(block, wt:1, w:Infinity, sid:dbView)
++++(col)
+++++(row, vAlign:center, hAlign:center, pT:4, pB:4)
++++++(titleM, pL:8, pR:8)Tree is a simple display mode
 for understanding the data structure.
-++++++(titleM, mR:8)Samples:
-++++++(dropdownBtn, sid:samplingNum)
-+++++++(menu)1
-+++++++(menu)2
-+++++++(menu)3
++++++(titleM, mR:8)Samples:
++++++(dropdownBtn, sid:samplingNum)
+++++++(menu)1
+++++++(menu)2
+++++++(menu)3
 // TreeView
-+++++(text, mT:2, pAll:8)📂 users
+++++(text, mT:2, pAll:8)📂 users
    ├─ #1 { "id": 1, "name": "Alice", ... }
    ├─ #2 { "id": 2, "name": "Bob", ... }
 📂 orders

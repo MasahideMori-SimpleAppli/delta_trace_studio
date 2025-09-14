@@ -1,4 +1,6 @@
 (row, vAlign:center, hAlign:left, pL:8, pR:8)
++(checkbox, mT:6, sid: checkbox)
+++(menu)
 +(text, mT:4, mR:8)Query Type:
 +(dropdownBtn2, sid:queryType, mT:6)
 ++(menu, tag:add)add

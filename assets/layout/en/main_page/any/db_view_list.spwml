@@ -1,0 +1,14 @@
+(row, vAlign:center, hAlign:center, pT:4, pB:4)
++(titleM, pL:8, pR:16)Direct DB editing mode
++(titleM, mL:16, mR:8)Target:
++(tf, w:150, labelText:Collection\ Name, maxLines:1, sid:targetCollectionName)
++(titleM, mL:16, mR:8)Items per page:
++(dropdownBtn2, sid:itemsPerPage)
+++(menu, tag:10)10
+++(menu, tag:20)20
+++(menu, tag:50)50
+++(menu, tag:100)100
+++(menu, tag:200)200
+(scroll, wt:1, sid:scrollView)
++(col, mT:2, pAll:8, sid:collectionItems)
+(block, sid:paging)

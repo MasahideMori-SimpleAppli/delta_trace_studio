@@ -1,0 +1,17 @@
+(row, vAlign:center, hAlign:center, pT:4, pB:4)
++(titleM, pL:8, pR:8)Tree is a simple display mode 
+for understanding the data structure.
++(titleM, mR:8)Sampling:
++(dropdownBtn2, sid:samplingNum)
+++(menu, tag:1)1
+++(menu, tag:3)3
+++(menu, tag:5)5
++(titleM, mL:8, mR:8)Text length:
++(dropdownBtn2, sid:textLength)
+++(menu, tag:25)25
+++(menu, tag:50)50
+++(menu, tag:75)75
+++(menu, tag:100)100
+++(menu, tag:200)200
+(scroll, wt:1)
++(text, w:Infinity, mT:2, pAll:8, sid:treeView)

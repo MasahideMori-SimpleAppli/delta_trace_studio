@@ -1,0 +1,13 @@
+(row, vAlign:center, hAlign:center, pT:4, pB:4)
++(titleM, pL:8, pR:8)Displays a list of queries made 
+to the server in this session.
++(titleM, mR:8)Items per page:
++(dropdownBtn2, sid:itemsPerPage)
+++(menu, tag:5)5
+++(menu, tag:10)10
+++(menu, tag:15)15
+++(menu, tag:20)20
+++(menu, tag:25)25
+(scroll, wt:1, sid:scrollView)
++(col, mT:2, pAll:8, sid:queries)
+(block, sid:paging)

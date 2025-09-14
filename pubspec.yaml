@@ -12,17 +12,22 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  # official packages
   intl: any
   flutter_launcher_icons: ^0.14.4
+  web: ^1.1.1
 
   # original packages
-  simple_widget_markup: ^43.0.3
+  simple_widget_markup: ^45.0.4
   simple_managers: any
   simple_locale: any
-  delta_trace_db: ^0.0.11
+  file_state_manager: ^2.0.0
+  delta_trace_db: ^0.0.31
 
   # other packages
   url_launcher: ^6.1.5
+  file_picker: ^10.3.2
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +41,9 @@ flutter:
   assets:
     - assets/layout/en/main_page/any/main_page.spwml
     - assets/layout/en/main_page/any/q_add.spwml
+    - assets/layout/en/main_page/any/db_view_list.spwml
+    - assets/layout/en/main_page/any/db_view_log.spwml
+    - assets/layout/en/main_page/any/db_view_tree.spwml
 
   fonts:
     - family: Noto Sans JP

@@ -1,6 +1,6 @@
 # delta_trace_studio
 
-* このプロジェクトは作成中です。
+* 現在、クエリエディタは作成中です。
 
 (en)Japanese ver is [here](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md).  
 (ja)この解説の日本語版は[ここ](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md) にあります。  
