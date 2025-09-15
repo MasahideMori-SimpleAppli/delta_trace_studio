@@ -25,6 +25,12 @@ class _DbViewState extends State<DbView> {
     stateDB.addListener(EnumDbCollection.dbViewMode.name, dbChangeCallback);
   }
 
+  @override
+  void dispose() {
+    stateDB.removeListener(EnumDbCollection.dbViewMode.name, dbChangeCallback);
+    super.dispose();
+  }
+
   void dbChangeCallback() {
     setState(() {
       // 必要な場合は追加の処理を入れることも可能。
