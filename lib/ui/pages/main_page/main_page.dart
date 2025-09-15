@@ -7,7 +7,7 @@ import 'package:delta_trace_studio/ui/pages/main_page/db_view/view_mode.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/query/query_widget.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_managers/simple_managers.dart';
@@ -254,15 +254,13 @@ class _MainPageState extends State<MainPage> {
     BtnElement importDB = b.getElement("importDB") as BtnElement;
     importDB.setCallback(() async {
       try {
-        final result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['dtdb'],
-          withData: true,
+        const XTypeGroup typeGroup = XTypeGroup(
+          label: 'Database files',
+          extensions: ['dtdb'],
         );
+        final XFile? result = await openFile(acceptedTypeGroups: [typeGroup]);
         // キャンセル時用。
-        if (result == null) return;
-        final bytes = result.files.single.bytes;
-        if (bytes == null) {
+        if (result == null) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -271,8 +269,8 @@ class _MainPageState extends State<MainPage> {
               ),
             );
           }
-          return;
         }
+        final bytes = await result!.readAsBytes();
         final content = utf8.decode(bytes); // JSON文字列に変換
         final data = jsonDecode(content); // JSON → Mapに変換
         setState(() {

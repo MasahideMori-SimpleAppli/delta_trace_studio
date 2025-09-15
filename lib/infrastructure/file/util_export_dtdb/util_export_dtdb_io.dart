@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:file_selector/file_selector.dart';
 
 class UtilExportDTDBImpl {
-
   /// for desktop etc.
   /// * [data] : dtdb data.
   /// * [isLocalTime] : If false, save timestamp create from UTC time.
-  static Future<void> exportDTDB(Map<String, dynamic> data, bool isLocalTime) async {
+  static Future<void> exportDTDB(
+    Map<String, dynamic> data,
+    bool isLocalTime,
+  ) async {
     String prefix = "backup";
     String exp = ".dtdb";
     // 現在時刻
@@ -20,12 +22,19 @@ class UtilExportDTDBImpl {
     String uniqueId = Uuid().v4().replaceAll('-', '').substring(0, 8);
     // ファイル名生成
     String fileName = "${prefix}_${timestamp}_$uniqueId$exp";
-    String? path = await FilePicker.platform.saveFile(
-      dialogTitle: 'Save JSON file',
-      fileName: fileName,
+    // ファイルタイプを指定（任意）
+    const XTypeGroup typeGroup = XTypeGroup(
+      label: 'Database files',
+      extensions: ['dtdb'],
+    );
+    // 保存先パスを選択
+    final FileSaveLocation? path = await getSaveLocation(
+      suggestedName: fileName,
+      acceptedTypeGroups: [typeGroup],
+      confirmButtonText: 'Save',
     );
     if (path == null) return;
-    final file = File(path);
+    final file = File(path.path);
     await file.writeAsString(jsonEncode(data));
   }
 }
