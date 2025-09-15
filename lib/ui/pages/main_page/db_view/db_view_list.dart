@@ -43,6 +43,9 @@ class _DbViewListState extends State<DbViewList> {
     _sm.dispose();
     _scCtrl.dispose();
     _tec.dispose();
+    if (_target != null && _target != "") {
+      localDB.removeListener(_target!, dbChangeCallback);
+    }
     super.dispose();
   }
 
