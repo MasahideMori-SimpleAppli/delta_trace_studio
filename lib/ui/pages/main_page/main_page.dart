@@ -261,16 +261,9 @@ class _MainPageState extends State<MainPage> {
         final XFile? result = await openFile(acceptedTypeGroups: [typeGroup]);
         // キャンセル時用。
         if (result == null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Failed to read file."),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
+          return;
         }
-        final bytes = await result!.readAsBytes();
+        final bytes = await result.readAsBytes();
         final content = utf8.decode(bytes); // JSON文字列に変換
         final data = jsonDecode(content); // JSON → Mapに変換
         setState(() {

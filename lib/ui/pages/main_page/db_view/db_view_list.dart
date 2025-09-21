@@ -20,7 +20,7 @@ class _DbViewListState extends State<DbViewList> {
   // https://pub.dev/packages/simple_managers
   final StateManager _sm = StateManager();
   static const int _defItemsPerPage = 10;
-  String? _target;
+  String? _selectedTarget;
   int _itemsPerPage = _defItemsPerPage;
   int _pageIndex = 0;
   final ScrollController _scCtrl = ScrollController();
@@ -43,9 +43,6 @@ class _DbViewListState extends State<DbViewList> {
     _sm.dispose();
     _scCtrl.dispose();
     _tec.dispose();
-    if (_target != null && _target != "") {
-      localDB.removeListener(_target!, dbChangeCallback);
-    }
     super.dispose();
   }
 
@@ -103,25 +100,23 @@ class _DbViewListState extends State<DbViewList> {
 
   /// ここでビューの初期化やボタンのコールバックなどを設定します。
   void _initViewAndCallbacks(SpWMLBuilder b) {
-    // ターゲットによって分岐。
-    TextFieldElement tfe =
-        b.getElement("targetCollectionName") as TextFieldElement;
-    tfe.setOnEditingComplete(() {
-      setState(() {
-        // 画面更新。
-      });
-    });
-    if (_target != null && _target != "") {
-      localDB.removeListener(_target!, dbChangeCallback);
-    }
-    _target = tfe.getValue();
-    if (_target == null || _target == "") {
-      return;
-    }
-    localDB.addListener(_target!, dbChangeCallback);
+    // ターゲットを設定。
+    b.replace(
+      "targetCollectionDDBtn",
+      _buildStringDropdown(
+        items: localDB.raw.keys.toList(),
+        selectedValue: _selectedTarget,
+        onChanged: (String? s) {
+          setState(() {
+            _selectedTarget = s;
+          });
+        },
+      ),
+    );
     // トータルページ数などの計算
-    int totalPages = (localDB.collection(_target!).length / _itemsPerPage)
-        .ceil();
+    int totalPages = _selectedTarget == null
+        ? 1
+        : (localDB.collection(_selectedTarget!).length / _itemsPerPage).ceil();
     if (totalPages == 0) {
       totalPages = 1;
     }
@@ -149,10 +144,74 @@ class _DbViewListState extends State<DbViewList> {
       ),
     );
     (b.getElement("scrollView") as ScrollElement).setScrollController(_scCtrl);
-    b.replaceUnderStructure("collectionItems", _getCollectionItems(_target!));
+    b.replaceUnderStructure(
+      "collectionItems",
+      _getCollectionItems(_selectedTarget),
+    );
+    // removeCollection
+    BtnElement removeCollectionBtn =
+        b.getElement("removeCollection") as BtnElement;
+    if (_selectedTarget == null) {
+      removeCollectionBtn.setEnabled(false);
+    }
+    removeCollectionBtn.setCallback(() {
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Confirmation'),
+            content: const Text(
+              'The displayed collection will be deleted from the database.\nAre you sure?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(); // ダイアログを閉じる
+                },
+                child: const Text('No'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(); // ダイアログを閉じる
+                  setState(() {
+                    if (_selectedTarget != null) {
+                      localDB.removeCollection(_selectedTarget!);
+                      _selectedTarget = null;
+                    }
+                  });
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 
-  List<Widget> _getCollectionItems(String target) {
+  /// Stringリストからドロップダウンボタンを作成する関数
+  Widget _buildStringDropdown({
+    required List<String> items,
+    required String? selectedValue,
+    required ValueChanged<String?> onChanged,
+    String hintText = "Please select",
+  }) {
+    return DropdownButton<String>(
+      value: selectedValue,
+      hint: Text(hintText),
+      isExpanded: false,
+      items: items.map((String value) {
+        return DropdownMenuItem<String>(value: value, child: Text(value));
+      }).toList(),
+      onChanged: onChanged,
+    );
+  }
+
+  /// 選択中のコレクションの内容をWidgetのリストに変換する関数。
+  List<Widget> _getCollectionItems(String? target) {
+    if(target == null){
+      return [SpWML("(text, mT:2, pAll:8)Please select target collection.")];
+    }
     final offset = _pageIndex * _itemsPerPage;
     List<Map<String, dynamic>> items = localDB
         .collection(target)
@@ -198,7 +257,7 @@ class _DbViewListState extends State<DbViewList> {
                             content: ConstrainedBox(
                               constraints: const BoxConstraints(
                                 maxWidth: 600, // 最大幅を600pxに制限
-                                minWidth: 320
+                                minWidth: 320,
                               ),
                               child: SingleChildScrollView(
                                 child: TextField(

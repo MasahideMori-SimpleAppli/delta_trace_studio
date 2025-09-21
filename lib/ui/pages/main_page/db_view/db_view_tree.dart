@@ -121,6 +121,9 @@ class _DbViewTreeState extends State<DbViewTree> {
     int maxFieldLength = 50,
     int maxSamplesPerDb = 1,
   }) {
+    if(dbData.isEmpty){
+      return ["No data."];
+    }
     final List<String> r = [];
     dbData.forEach((String collectionName, Collection collection) {
       r.add('📂 $collectionName');
