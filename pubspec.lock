@@ -93,10 +93,10 @@ packages:
     dependency: "direct main"
     description:
       name: delta_trace_db
-      sha256: a4fae95db4f43525bbf604cea5d8e85ba716c2722d2885310acca0a2bc0447c3
+      sha256: "742ff41e59a3dc1f4241b85afa5ddc55936712a9838643fd733b8b8b5e2a9f9b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.33"
+    version: "0.0.34"
   fake_async:
     dependency: transitive
     description:
@@ -393,10 +393,10 @@ packages:
     dependency: "direct main"
     description:
       name: simple_widget_markup
-      sha256: "36719753d3ca4f841035220cbf02c4dcb795fcd0ef823a80d038483dcceb18fe"
+      sha256: bd1ec79f6b1ac2e73ba4ea12db661ceaa7b24599fc192cc2b19414785e18f8ad
       url: "https://pub.dev"
     source: hosted
-    version: "45.0.4"
+    version: "45.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
