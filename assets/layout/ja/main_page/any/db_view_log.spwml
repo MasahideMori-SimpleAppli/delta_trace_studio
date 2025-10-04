@@ -1,7 +1,7 @@
 (row, vAlign:center, hAlign:center, pT:4, pB:4)
-+(titleM, pL:8, pR:8)Displays a list of queries made 
-to the server in this session.
-+(titleM, mL:8, mR:8)Items per page:
++(titleM, pL:8, pR:8)このセッションでサーバーに対して行われた
+クエリのリストを表示します。
++(titleM, mL:8, mR:8)同時表示数:
 +(dropdownBtn2, sid:itemsPerPage)
 ++(menu, tag:5)5
 ++(menu, tag:10)10

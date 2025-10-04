@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/infrastructure/file/util_export_dtdb.dart';
+import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/view_mode.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
@@ -9,6 +10,7 @@ import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:simple_locale/simple_locale.dart';
 import 'package:simple_managers/simple_managers.dart';
 import 'package:simple_widget_markup/simple_widget_markup.dart';
 
@@ -45,8 +47,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   String? _getLayout(BuildContext context) {
-    // final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
-    const String lang = "en";
+    final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
     // page name
     const String pageName = "main_page";
     const String windowClass = "any";
@@ -97,8 +98,7 @@ class _MainPageState extends State<MainPage> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-          child: Text(
-            "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here.",
+          child: Text(AppLocalizations.of(context)!.enterQueryCode,
           ),
         ),
         Expanded(

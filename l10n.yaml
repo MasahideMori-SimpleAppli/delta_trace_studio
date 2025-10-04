@@ -1,5 +1,7 @@
 # The files are generated into the path specified by `arb-dir`
 arb-dir: lib/i18n
 
+template-arb-file: app_en.arb
+
 # Or, specifically provide an output path:
 output-dir: lib/src/generated/i18n

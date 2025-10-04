@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/main.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_locale/simple_locale.dart';
 
 import 'package:simple_managers/simple_managers.dart';
 import 'package:simple_widget_markup/simple_widget_markup.dart';
@@ -34,8 +35,7 @@ class _DbViewTreeState extends State<DbViewTree> {
 
   /// レイアウトを取得します。
   String? _getLayout(BuildContext context) {
-    // final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
-    const String lang = "en";
+    final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
     // page name
     const String pageName = "main_page";
     const String windowClass = "any";

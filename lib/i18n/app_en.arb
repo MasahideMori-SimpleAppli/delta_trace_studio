@@ -1,4 +1,6 @@
 {
   "aboutApp" : "About DeltaTraceDB",
-  "license": "License"
+  "license": "License",
+  "changeLanguage" : "日本語",
+  "enterQueryCode" : "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here."
 }

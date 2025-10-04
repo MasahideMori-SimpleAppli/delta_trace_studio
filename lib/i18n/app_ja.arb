@@ -1,0 +1,7 @@
+{
+  "@@locale": "ja",
+  "aboutApp" : "DeltaTraceDBについて",
+  "license": "License",
+  "changeLanguage" : "English",
+  "enterQueryCode" : "IDEで作成したクエリを「debugPrint(jsonEncode(query.toDict()))」した結果を貼り付けると実行できます。"
+}

@@ -1,8 +1,8 @@
 (row, vAlign:center, hAlign:center, pT:4, pB:4)
-+(titleM, pL:8, pR:8)Direct DB editing mode
-+(titleM, mL:8, mR:8)Target:
++(titleM, pL:8, pR:8)DBの直接編集モード
++(titleM, mL:8, mR:8)ターゲット:
 +(block, sid:targetCollectionDDBtn)
-+(titleM, mL:16, mR:8)Items per page:
++(titleM, mL:16, mR:8)同時表示数:
 +(dropdownBtn2, sid:itemsPerPage)
 ++(menu, tag:10)10
 ++(menu, tag:20)20

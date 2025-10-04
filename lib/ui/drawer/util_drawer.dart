@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_locale/simple_locale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/f_app.dart';
@@ -33,21 +34,21 @@ class UtilDrawer {
               }
             },
           ),
-          // ListTile(
-          //   title: Text(AppLocalizations.of(context)!.changeLanguage),
-          //   onTap: () async {
-          //     if (context.mounted) {
-          //       final Locale now = LocaleManager.of(context)?.getLocale() ??
-          //           const Locale("en");
-          //       if (now == const Locale("en")) {
-          //         LocaleManager.of(context)?.changeLocale(const Locale("ja"));
-          //       } else {
-          //         LocaleManager.of(context)?.changeLocale(const Locale("en"));
-          //       }
-          //       Navigator.pop(context);
-          //     }
-          //   },
-          // ),
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.changeLanguage),
+            onTap: () async {
+              if (context.mounted) {
+                final Locale now = LocaleManager.of(context)?.getLocale() ??
+                    const Locale("en");
+                if (now == const Locale("en")) {
+                  LocaleManager.of(context)?.changeLocale(const Locale("ja"));
+                } else {
+                  LocaleManager.of(context)?.changeLocale(const Locale("en"));
+                }
+                Navigator.pop(context);
+              }
+            },
+          ),
           ListTile(
             title: Text(AppLocalizations.of(context)!.license),
             onTap: () {

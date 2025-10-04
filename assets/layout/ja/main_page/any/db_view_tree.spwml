@@ -1,12 +1,12 @@
 (row, vAlign:center, hAlign:center, pT:4, pB:4)
-+(titleM, pL:8, pR:8)Tree is a simple display mode 
-for understanding the data structure.
++(titleM, pL:8, pR:8)データ構造の理解のための
+シンプルな表示モードです。
 +(titleM, mL:8, mR:8)Sampling:
 +(dropdownBtn2, sid:samplingNum)
 ++(menu, tag:1)1
 ++(menu, tag:3)3
 ++(menu, tag:5)5
-+(titleM, mL:8, mR:8)Text length:
++(titleM, mL:8, mR:8)テキスト長:
 +(dropdownBtn2, sid:textLength)
 ++(menu, tag:25)25
 ++(menu, tag:50)50
