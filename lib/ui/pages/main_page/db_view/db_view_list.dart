@@ -16,8 +16,7 @@ class DbViewList extends StatefulWidget {
 }
 
 class _DbViewListState extends State<DbViewList> {
-  // マネージャークラス。
-  // https://pub.dev/packages/simple_managers
+  // The manager class for SpWML.
   final StateManager _sm = StateManager();
   static const int _defItemsPerPage = 10;
   String? _selectedTarget;
@@ -34,7 +33,7 @@ class _DbViewListState extends State<DbViewList> {
 
   void dbChangeCallback() {
     setState(() {
-      // 必要な場合は追加の処理を入れることも可能。
+      // update UI
     });
   }
 
@@ -46,19 +45,14 @@ class _DbViewListState extends State<DbViewList> {
     super.dispose();
   }
 
-  /// レイアウトを取得します。
   String? _getLayout(BuildContext context) {
-    // 言語。ローカライズしたい場合はsimple_localeパッケージ(https://pub.dev/packages/simple_locale)が利用できます。
     // final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
     const String lang = "en";
-    // ページ名
+    // page name
     const String pageName = "main_page";
-    // 画面サイズ。any以外を自動で切り替えたい場合はSpWMLLayoutManager.getWindowClass(context).nameが利用できます。
     const String windowClass = "any";
-    // 読み込むSpWMLのファイル名
+    // loading SpWML file name
     const String fileName = "db_view_list";
-    // このパスをpubspec.yamlに追加してください。
-    // - assets/layout/en/main_page/any/db_view_log.spwml
     final String path =
         "assets/layout/$lang/$pageName/$windowClass/$fileName.spwml";
     return SpWMLLayoutManager().getAssets(
@@ -79,7 +73,6 @@ class _DbViewListState extends State<DbViewList> {
     );
   }
 
-  /// 必要な場合はScaffoldとSafeAreaなどで囲むラッパー。
   Widget _wrap(Widget w) {
     return w;
   }
@@ -91,7 +84,7 @@ class _DbViewListState extends State<DbViewList> {
       return _wrap(const Center(child: CircularProgressIndicator()));
     } else {
       SpWMLBuilder b = SpWMLBuilder(layout, padding: EdgeInsets.zero);
-      // SpWMLに設定されているSIDを使って、各種マネージャークラスを自動設定します。
+      // Various manager classes are automatically configured using the SID set in SpWML.
       b.setStateManager(_sm);
       _initViewAndCallbacks(b);
       return _wrap(b.build(context));

@@ -40,7 +40,6 @@ flutter:
 
   assets:
     - assets/layout/en/main_page/any/main_page.spwml
-    - assets/layout/en/main_page/any/q_add.spwml
     - assets/layout/en/main_page/any/db_view_list.spwml
     - assets/layout/en/main_page/any/db_view_log.spwml
     - assets/layout/en/main_page/any/db_view_tree.spwml

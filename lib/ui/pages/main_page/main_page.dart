@@ -5,7 +5,6 @@ import 'package:delta_trace_studio/infrastructure/file/util_export_dtdb.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/view_mode.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/query/query_widget.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
@@ -24,46 +23,18 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // マネージャークラス。
-  // https://pub.dev/packages/simple_managers
+  // The manager class for SpWML.
   final StateManager _sm = StateManager();
 
   final TextEditingController _tecJSON = TextEditingController(text: "");
 
-  // 作成したクエリのバッファ
-  final List<Query> _queries = [];
-
-  // クエリまたはコード変換の結果
+  // result code.
   String _resultStr = "Empty.";
 
   @override
   void initState() {
     super.initState();
     _sm.tsm.setSelection("queryMode", "Json");
-    _queries.add(
-      RawQueryBuilder.add(
-        target: "users",
-        rawAddData: [
-          {"id": 0, "name": "test1"},
-        ],
-      ).build(),
-    );
-    _queries.add(
-      RawQueryBuilder.add(
-        target: "users",
-        rawAddData: [
-          {"id": 1, "name": "test2"},
-        ],
-      ).build(),
-    );
-    _queries.add(
-      RawQueryBuilder.add(
-        target: "users",
-        rawAddData: [
-          {"id": 2, "name": "test3"},
-        ],
-      ).build(),
-    );
   }
 
   @override
@@ -73,17 +44,14 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
-  /// レイアウトを取得します。
   String? _getLayout(BuildContext context) {
-    // 言語。ローカライズしたい場合はsimple_localeパッケージ(https://pub.dev/packages/simple_locale)が利用できます。
     // final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
     const String lang = "en";
-    // ページ名
+    // page name
     const String pageName = "main_page";
     const String windowClass = "any";
-    // 読み込むSpWMLのファイル名
+    // loading SpWML file name
     const String fileName = "main_page";
-    // - assets/layout/en/main_page/any/main_page.spwml
     final String path =
         "assets/layout/$lang/$pageName/$windowClass/$fileName.spwml";
     return SpWMLLayoutManager().getAssets(
@@ -104,7 +72,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  /// 必要な場合はScaffoldとSafeAreaなどで囲むラッパー。
   Widget _wrap(Widget w) {
     return Scaffold(body: SafeArea(child: w));
   }
@@ -116,7 +83,7 @@ class _MainPageState extends State<MainPage> {
       return _wrap(const Center(child: CircularProgressIndicator()));
     } else {
       SpWMLBuilder b = SpWMLBuilder(layout, padding: EdgeInsets.zero);
-      // SpWMLに設定されているSIDを使って、各種マネージャークラスを自動設定します。
+      // Various manager classes are automatically configured using the SID set in SpWML.
       b.setStateManager(_sm);
       _initViewAndCallbacks(b);
       return _wrap(b.build(context));
@@ -124,117 +91,51 @@ class _MainPageState extends State<MainPage> {
   }
 
   /// create query widgets.
-  Widget _createQWidgets(String? mode) {
-    if (mode == "Json") {
-      return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-            child: Text(
-              "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here.",
+  Widget _createQWidgets() {
+    // now JSON only.
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+          child: Text(
+            "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here.",
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(controller: _tecJSON, maxLines: null),
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: TextField(controller: _tecJSON, maxLines: null),
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      List<Widget> r = [];
-      for (int index = 0; index < _queries.length; index++) {
-        final i = _queries[index];
-        r.add(
-          QueryWidget(
-            index: index,
-            query: i,
-            onChanged: (int index, Query? q) {
-              setState(() {
-                if (q == null) {
-                  // delete
-                  _queries.removeAt(index);
-                } else {
-                  // update
-                  _queries[index] = q;
-                }
-              });
-            },
-          ),
-        );
-      }
-      return SingleChildScrollView(child: Column(children: r));
-    }
+        ),
+      ],
+    );
   }
 
-  /// ここでビューの初期化やボタンのコールバックなどを設定します。
   void _initViewAndCallbacks(SpWMLBuilder b) {
-    // 左上
-    // クエリの追加や一括削除。
-    // BtnElement btn1 = b.getElement("addQuery") as BtnElement;
-    // btn1.setCallback(() {});
-    // BtnElement btn2 = b.getElement("clearQuery") as BtnElement;
-    // btn2.setCallback(() {
-    //   setState(() {
-    //     _queries.clear();
-    //   });
-    // });
+    // query view
+    b.replace("queryView", _createQWidgets());
 
-    // クエリの実行モード
-    DropdownBtn2Element qMode =
-        b.getElement("queryMode") as DropdownBtn2Element;
-    qMode.setCallback((String? mode) {
-      setState(() {});
-    });
-
-    // 作成済みのクエリのリストをウィジェットとして表示
-    b.replace("queryView", _createQWidgets(qMode.getValue()));
-
-    // クエリの実行
+    // run query button
     BtnElement btn3 = b.getElement("runQuery") as BtnElement;
     btn3.setCallback(() {
-      String queryMode = qMode.getValue()!;
-      if (queryMode == "Normal") {
-        // Normal
-      } else if (queryMode == "Transaction") {
-        // Transaction
-      } else {
-        // Json
-        final Map<String, dynamic> jsonObj = jsonDecode(_tecJSON.text);
-        setState(() {
-          try {
-            final result = localDB.executeQueryObject(jsonObj);
-            _resultStr = JsonEncoder.withIndent('  ').convert(result.toDict());
-            if (result.isSuccess) {
-              appliedQueries.add(
-                QueryWithTime(jsonObj, DateTime.now().toUtc()),
-              );
-            }
-          } catch (e) {
-            _resultStr = e.toString();
+      // Json
+      final Map<String, dynamic> jsonObj = jsonDecode(_tecJSON.text);
+      setState(() {
+        try {
+          final result = localDB.executeQueryObject(jsonObj);
+          _resultStr = JsonEncoder.withIndent('  ').convert(result.toDict());
+          if (result.isSuccess) {
+            appliedQueries.add(QueryWithTime(jsonObj, DateTime.now().toUtc()));
           }
-        });
-      }
+        } catch (e) {
+          _resultStr = e.toString();
+        }
+      });
     });
-    // BtnElement btn4 = b.getElement("convertDart") as BtnElement;
-    // btn4.setCallback(() {
-    //   String queryMode = qMode.getValue()!;
-    //   if (queryMode == "Normal") {
-    //     // Normal
-    //   } else if (queryMode == "Transaction") {
-    //     // Transaction
-    //   } else {
-    //     // Json
-    //     setState(() {
-    //       _resultStr = "Json to code conversion is not supported.";
-    //     });
-    //   }
-    // });
 
-    // 左下
+    // left bottom
     BtnElement btn5 = b.getElement("resultCopy") as BtnElement;
     btn5.setCallback(() async {
       await _setToClipboard(_resultStr);
@@ -250,7 +151,7 @@ class _MainPageState extends State<MainPage> {
     TextElement elm2 = b.getElement("queryResult") as TextElement;
     elm2.setContentText(_resultStr);
 
-    // 右上
+    // right top
     BtnElement importDB = b.getElement("importDB") as BtnElement;
     importDB.setCallback(() async {
       try {
@@ -264,8 +165,8 @@ class _MainPageState extends State<MainPage> {
           return;
         }
         final bytes = await result.readAsBytes();
-        final content = utf8.decode(bytes); // JSON文字列に変換
-        final data = jsonDecode(content); // JSON → Mapに変換
+        final content = utf8.decode(bytes); // to JSON string
+        final data = jsonDecode(content); // JSON → Map
         setState(() {
           localDB = DeltaTraceDatabase.fromDict(data);
           appliedQueries.clear();
@@ -290,7 +191,7 @@ class _MainPageState extends State<MainPage> {
             title: const Text("Export Database"),
             content: ConstrainedBox(
               constraints: const BoxConstraints(
-                maxWidth: 600, // 最大幅を600pxに制限
+                maxWidth: 600,
                 minWidth: 320,
               ),
               child: Text(
@@ -328,7 +229,7 @@ class _MainPageState extends State<MainPage> {
       );
     });
 
-    // 右下
+    // right bottom
     b.replace("dbView", DbView());
   }
 

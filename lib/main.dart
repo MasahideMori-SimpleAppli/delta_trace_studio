@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/drawer/util_drawer.dart';

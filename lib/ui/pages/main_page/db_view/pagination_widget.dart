@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class PaginationWidget extends StatelessWidget {
-  final int pageNum; // 現在のページ番号
-  final int totalPages; // 総ページ数
+  final int pageNum; // now page num
+  final int totalPages; // total pages
   final void Function(int selectedPageNum) callback;
 
   const PaginationWidget({
@@ -18,30 +18,31 @@ class PaginationWidget extends StatelessWidget {
       return List.generate(totalPages, (i) => i + 1);
     }
 
-    const visibleRange = 2; // 現在ページの前後に何ページ見せるか
+    const visibleRange =
+        2; // 現在ページの前後に何ページ見せるか(How many pages to show before and after the current page)
     final List<int?> pages = [];
 
-    // 先頭ページ
+    // 先頭ページ(top page)
     pages.add(1);
 
-    // 現在ページの前に飛びがあれば "..." を追加
+    // 現在ページの前に飛びがあれば "..." を追加(Add "..." if there is a jump before the current page)
     if (pageNum - visibleRange > 2) {
       pages.add(null);
     }
 
-    // 現在ページの前後を追加
+    // 現在ページの前後を追加(Add before and after the current page)
     final start = max(2, pageNum - visibleRange);
     final end = min(totalPages - 1, pageNum + visibleRange);
     for (int i = start; i <= end; i++) {
       pages.add(i);
     }
 
-    // 現在ページの後に飛びがあれば "..." を追加
+    // 現在ページの後に飛びがあれば "..." を追加(Add "..." if there is a jump after the current page)
     if (pageNum + visibleRange < totalPages - 1) {
       pages.add(null);
     }
 
-    // 最後のページ
+    // 最後のページ(last page)
     pages.add(totalPages);
 
     return pages;
@@ -75,9 +76,11 @@ class PaginationWidget extends StatelessWidget {
                       ? Theme.of(context).colorScheme.primary
                       : Colors.grey[300],
                   foregroundColor: p == pageNum ? Colors.white : Colors.black,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  minimumSize: const Size(36, 36), // 最小サイズを設定
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  minimumSize: const Size(36, 36),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text("$p"),

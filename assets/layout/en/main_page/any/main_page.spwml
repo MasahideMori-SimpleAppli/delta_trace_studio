@@ -3,18 +3,13 @@
 ++(split, wt:1, axis:vertical, barSize:4, elevation:0.0, sid:split2)
 +++(col, w:Infinity)
 ++++(row, bgColor:teal[200], pL:8, pR:8, pT:6, pB:6, vAlign:center)
-+++++(h4, mT:0, mB:4, wt:1)Query Builder
++++++(h4, mT:0, mB:4, wt:1)Query
 +++++(dropdownBtn2, sid:queryMode)
-//++++++(menu, tag:Normal)Normal
-//++++++(menu, tag:Transaction)Transaction
 ++++++(menu, tag:Json)Json
-//+++++(btn, type:icon, iconNum:0xe047, mL:12, sid:addQuery)Add
-//+++++(btn, type:icon, iconNum:0xe168, mL:8, sid:clearQuery)Clear
 ++++(block, wt:1, sid:queryView)
 ++++(line)
 ++++(row, hAlign:center, mT:8, mB:12)
 +++++(btn, type:outlined, mR:12,  textColor:null, sid:runQuery)Run query
-//+++++(btn, type:outlined, textColor:null, sid:convertDart)Convert Dart
 +++(col, w:Infinity, pT:4)
 ++++(row, bgColor:teal[200], pL:8, pR:8, pT:12, pB:12, vAlign:center)
 +++++(h4, mT:0, mB:4, elevation:0.0)Result

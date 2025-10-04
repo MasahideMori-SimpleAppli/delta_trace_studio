@@ -17,8 +17,7 @@ class DbViewLog extends StatefulWidget {
 }
 
 class _DbViewLogState extends State<DbViewLog> {
-  // マネージャークラス。
-  // https://pub.dev/packages/simple_managers
+  // The manager class for SpWML.
   final StateManager _sm = StateManager();
   static const int _defItemsPerPage = 5;
   int _itemsPerPage = _defItemsPerPage;
@@ -38,19 +37,14 @@ class _DbViewLogState extends State<DbViewLog> {
     super.dispose();
   }
 
-  /// レイアウトを取得します。
   String? _getLayout(BuildContext context) {
-    // 言語。ローカライズしたい場合はsimple_localeパッケージ(https://pub.dev/packages/simple_locale)が利用できます。
     // final String lang = LocaleManager.of(context)?.getLanguageCode() ?? "en";
     const String lang = "en";
-    // ページ名
+    // page name
     const String pageName = "main_page";
-    // 画面サイズ。any以外を自動で切り替えたい場合はSpWMLLayoutManager.getWindowClass(context).nameが利用できます。
     const String windowClass = "any";
-    // 読み込むSpWMLのファイル名
+    // loading SpWML file name
     const String fileName = "db_view_log";
-    // このパスをpubspec.yamlに追加してください。
-    // - assets/layout/en/main_page/any/db_view_log.spwml
     final String path =
         "assets/layout/$lang/$pageName/$windowClass/$fileName.spwml";
     return SpWMLLayoutManager().getAssets(
@@ -71,7 +65,6 @@ class _DbViewLogState extends State<DbViewLog> {
     );
   }
 
-  /// 必要な場合はScaffoldとSafeAreaなどで囲むラッパー。
   Widget _wrap(Widget w) {
     return w;
   }
@@ -83,7 +76,7 @@ class _DbViewLogState extends State<DbViewLog> {
       return _wrap(const Center(child: CircularProgressIndicator()));
     } else {
       SpWMLBuilder b = SpWMLBuilder(layout, padding: EdgeInsets.zero);
-      // SpWMLに設定されているSIDを使って、各種マネージャークラスを自動設定します。
+      // Various manager classes are automatically configured using the SID set in SpWML.
       b.setStateManager(_sm);
       _initViewAndCallbacks(b);
       return _wrap(b.build(context));
