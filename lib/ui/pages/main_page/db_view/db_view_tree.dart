@@ -79,6 +79,7 @@ class _DbViewTreeState extends State<DbViewTree> {
     }
   }
 
+  /// This is where you set up view initialization, button callbacks, etc.
   void _initViewAndCallbacks(SpWMLBuilder b) {
     DropdownBtn2Element dropDownBtn2Elm1 =
         b.getElement("samplingNum") as DropdownBtn2Element;

@@ -1,4 +1,5 @@
 import 'package:delta_trace_db/delta_trace_db.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_how_to_use.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_log.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/view_mode.dart';
@@ -17,7 +18,7 @@ class DbView extends StatefulWidget {
 }
 
 class _DbViewState extends State<DbView> {
-  ViewMode _dbViewMode = ViewMode(EnumViewMode.treeView);
+  ViewMode _dbViewMode = ViewMode(EnumViewMode.howToUse);
 
   @override
   void initState() {
@@ -46,6 +47,8 @@ class _DbViewState extends State<DbView> {
       _dbViewMode = r.convert(ViewMode.fromDict).first;
     }
     switch (_dbViewMode.viewMode) {
+      case EnumViewMode.howToUse:
+        return DbViewHowToUse();
       case EnumViewMode.treeView:
         return DbViewTree();
       case EnumViewMode.listView:

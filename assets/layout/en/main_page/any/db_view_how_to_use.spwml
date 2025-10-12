@@ -1,0 +1,44 @@
+(scroll, wt:1, pAll:8)
++(col)
+++(h3)About DeltaTraceStudio
+++(line, mT:8)
+++(text)DeltaTraceStudio is a simple tool that allows you to edit databases created with DeltaTraceDB.
+Like DeltaTraceDB, it is developed as open source.
+++(text)The current recommended operating environment is as follows:
+- Display resolution 1920 * 1080 or higher
+////////////////////////////////////////////////////////////////////////////////
+++(line, mT:8)
+++(h5, mT:12)*How to operate
+++(h6)left side of screen
+++(text, mT:12)- [Query]
+Paste the DeltaTraceDB query (JSON) created in your favorite IDE and press the "Run query" button to run a query against the loaded DB.
+This is useful when you want to register initial values before starting to use the DB, or when complex operations are required.
+++(span, mT:8)
++++(text, mT:0)- [Result]
+When you run a query, you can check the returned value. By pressing the [
++++(icon, iconNum:0xe190, mT:4)
++++(text, mT:0)] button, you can copy the returned value to the clipboard.
+++(h6)画面右側
+++(text, mT:12)- [View mode]
+"How to use" : This screen. By switching between modes, you can check the contents of the database.
+"Tree" : This is a bird's-eye view of the entire DB. It simply displays a few samples from each collection in the DB. Use this when you want to easily understand the entire DB structure.
+"List" : This is a detailed display mode for each collection. When you specify a DB collection, the contents are displayed in paging. You can also copy and edit the contents.
+"Log" : You can check the list of queries issued from Query to the currently displayed DB.
+++(span, mT:8)
++++(text, mT:0)- By pressing the [
++++(icon, iconNum:0xf74a, mT:4)
++++(text, mT:0)] button, you can read and edit the specified dtdb format file.
+If you do not use this button and nothing is loaded, you will start editing from an empty database.
+++(span, mT:8)
++++(text, mT:0)- By pressing the [
++++(icon, iconNum:0xe201, mT:4)
++++(text, mT:0)] button, you can download the database you are editing as a dtdb format file.
+////////////////////////////////////////////////////////////////////////////////
+++(line, mT:6)
+++(h5)*Source code etc.
+++(text)DeltaTraceStudio(This software)
+++(href)https://github.com/MasahideMori-SimpleAppli/delta_trace_studio
+++(text)DeltaTraceDB(Dart version)
+++(href)https://github.com/MasahideMori-SimpleAppli/delta_trace_db
+++(text)DeltaTraceDB(Python version)
+++(href, mB:16)https://github.com/MasahideMori-SimpleAppli/delta_trace_db_py

@@ -83,7 +83,7 @@ class _DbViewLogState extends State<DbViewLog> {
     }
   }
 
-  /// ここでビューの初期化やボタンのコールバックなどを設定します。
+  /// This is where you set up view initialization, button callbacks, etc.
   void _initViewAndCallbacks(SpWMLBuilder b) {
     // トータルページ数などの計算
     int totalPages = (appliedQueries.length / _itemsPerPage).ceil();

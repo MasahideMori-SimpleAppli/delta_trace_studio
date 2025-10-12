@@ -1,0 +1,45 @@
+(scroll, wt:1, pAll:8)
++(col)
+++(h3)DeltaTraceStudioについて
+++(line, mT:8)
+++(text)DeltaTraceStudioは、DeltaTraceDBで作成したデータベースを編集できる簡易ツールです。
+DeltaTraceDB同様にオープンソースで開発されています。
+++(text)現在の推奨動作環境は以下の通りです。
+- ディスプレイ解像度 1920 * 1080 以上
+////////////////////////////////////////////////////////////////////////////////
+++(line, mT:8)
+++(h5, mT:12)*操作方法
+++(h6)画面左側
+++(text, mT:12)- [Query]
+お好みのIDEで作成したDeltaTraceDBのクエリ（JSON）を貼り付け、
+"Run query"ボタンを押すと、読み込み中のDBに対してクエリを実行できます。
+DBの使用開始前に初期設定で値を登録をしたい場合や、複雑な操作が必要な場合にはこれを使用すると便利です。
+++(span, mT:8)
++++(text, mT:0)- [Result]
+クエリ実行時に、戻り値を確認できます。
++++(icon, iconNum:0xe190, mT:4)
++++(text, mT:0)ボタンを押すと、戻り値をクリップボードにコピーできます。
+++(h6)画面右側
+++(text, mT:12)- [View mode]
+"使い方" : この画面です。ここを切り替えることで、いくつかのモードでDBの内容を確認できます。
+"Tree" : DB全体の俯瞰モードです。DBのコレクションそれぞれから数サンプルを簡易表示します。DB全体の構造を簡単に把握したい場合に使います。
+"List" : コレクション単位での詳細表示モードです。DBのコレクションを指定すると、内容をページングで表示します。内容のコピーや編集もできます。
+"Log" : 現在表示中のDBに対してQueryから発行したクエリの一覧を確認できます。
+++(span, mT:8)
++++(text, mT:0)- [
++++(icon, iconNum:0xf74a, mT:4)
++++(text, mT:0)] ボタンを押すと、指定したdtdb形式のファイルを読み込んで編集できます。
+なお、このボタンを使わず、何も読み込んでいない場合は空のデータベースから編集を開始します。
+++(span, mT:8)
++++(text, mT:0)- [
++++(icon, iconNum:0xe201, mT:4)
++++(text, mT:0)] ボタンを押すと、編集中のデータベースをdtdb形式のファイルとしてダウンロードできます。
+////////////////////////////////////////////////////////////////////////////////
+++(line, mT:6)
+++(h5)*ソースコードなど
+++(text)DeltaTraceStudio(このソフトウェア)
+++(href)https://github.com/MasahideMori-SimpleAppli/delta_trace_studio
+++(text)DeltaTraceDB(Dart版)
+++(href)https://github.com/MasahideMori-SimpleAppli/delta_trace_db
+++(text)DeltaTraceDB(Python版)
+++(href, mB:16)https://github.com/MasahideMori-SimpleAppli/delta_trace_db_py

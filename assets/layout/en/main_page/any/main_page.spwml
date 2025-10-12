@@ -24,6 +24,7 @@
 +++(h4, wt:1, mT:0, mB:4)DB Data
 +++(text, mT:0, mR:8)View mode:
 +++(dropdownBtn, sid:viewMode)
+++++(menu)How to use
 ++++(menu)Tree
 ++++(menu)List
 ++++(menu)Log

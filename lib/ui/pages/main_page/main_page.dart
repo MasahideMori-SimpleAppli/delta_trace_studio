@@ -113,6 +113,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  /// This is where you set up view initialization, button callbacks, etc.
   void _initViewAndCallbacks(SpWMLBuilder b) {
     // query view
     b.replace("queryView", _createQWidgets());

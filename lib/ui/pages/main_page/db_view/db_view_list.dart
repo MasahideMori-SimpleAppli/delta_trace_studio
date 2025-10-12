@@ -91,7 +91,7 @@ class _DbViewListState extends State<DbViewList> {
     }
   }
 
-  /// ここでビューの初期化やボタンのコールバックなどを設定します。
+  /// This is where you set up view initialization, button callbacks, etc.
   void _initViewAndCallbacks(SpWMLBuilder b) {
     // ターゲットを設定。
     b.replace(
