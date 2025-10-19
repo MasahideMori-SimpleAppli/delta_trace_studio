@@ -1,0 +1,53 @@
+(titleL)フィルター
+(titleM, mT:8)要素の絞り込みのため、最大２つまでフィルターを追加できます。
+フィルターは有効化したものがAnd条件で適用されます。
+(row, hAlign:center, pAll:8)
++(text, mT:22) 1.
++(tf, wt:1, mL:16, labelText:key, sid:key1)
++(dropdownBtn2, mL:12, mT:7, sid:comparisonMethod1)
+++(menu, tag:equals_)Equal
+++(menu, tag:notEquals_)Not Equal
+++(menu, tag:greaterThan_)Greater than
+++(menu, tag:lessThan_)Less than
+++(menu, tag:greaterThanOrEqual_)Greater than or Equal
+++(menu, tag:lessThanOrEqual_)Less than or Equal
+++(menu, tag:regex_)Matches regex
+++(menu, tag:contains_)Contains
+++(menu, tag:in_)In
+++(menu, tag:notIn_)Not in
+++(menu, tag:startsWith_)Starts with
+++(menu, tag:endsWith_)Ends with
++(tf, wt:1, mL:12, labelText:value, sid:value1)
++(dropdownBtn2, mL:12, mT:7, sid:type1)
+++(menu, tag:datetime_)Datetime
+++(menu, tag:int_)int
+++(menu, tag:floatStrict_)Float strict
+++(menu, tag:floatEpsilon12_)Float epsilon12
+++(menu, tag:boolean_)boolean
+++(menu, tag:string_)String
++(switchBtn, mL:12, mT:12, type:check, sid:switch1)
+(row, hAlign:center, pAll:8)
++(text, mT:22) 2.
++(tf, wt:1, mL:16, labelText:key, sid:key2)
++(dropdownBtn2, mL:12, mT:7, sid:comparisonMethod2)
+++(menu, tag:equals_)Equal
+++(menu, tag:notEquals_)Not Equal
+++(menu, tag:greaterThan_)Greater than
+++(menu, tag:lessThan_)Less than
+++(menu, tag:greaterThanOrEqual_)Greater than or Equal
+++(menu, tag:lessThanOrEqual_)Less than or Equal
+++(menu, tag:regex_)Matches regex
+++(menu, tag:contains_)Contains
+++(menu, tag:in_)In
+++(menu, tag:notIn_)Not in
+++(menu, tag:startsWith_)Starts with
+++(menu, tag:endsWith_)Ends with
++(tf, wt:1, mL:12, labelText:value, sid:value2)
++(dropdownBtn2, mL:12, mT:7, sid:type2)
+++(menu, tag:datetime_)Datetime
+++(menu, tag:int_)int
+++(menu, tag:floatStrict_)Float strict
+++(menu, tag:floatEpsilon12_)Float epsilon12
+++(menu, tag:boolean_)boolean
+++(menu, tag:string_)String
++(switchBtn, mL:12, mT:12, type:check, sid:switch2)

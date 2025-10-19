@@ -44,11 +44,13 @@ flutter:
     - assets/layout/en/main_page/any/db_view_list.spwml
     - assets/layout/en/main_page/any/db_view_log.spwml
     - assets/layout/en/main_page/any/db_view_tree.spwml
+    - assets/layout/en/main_page/any/filter_dialog.spwml
     - assets/layout/ja/main_page/any/main_page.spwml
     - assets/layout/ja/main_page/any/db_view_how_to_use.spwml
     - assets/layout/ja/main_page/any/db_view_list.spwml
     - assets/layout/ja/main_page/any/db_view_log.spwml
     - assets/layout/ja/main_page/any/db_view_tree.spwml
+    - assets/layout/ja/main_page/any/filter_dialog.spwml
 
   fonts:
     - family: Noto Sans JP
