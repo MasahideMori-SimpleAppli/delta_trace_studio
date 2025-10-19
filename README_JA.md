@@ -1,17 +1,18 @@
 # delta_trace_studio
 
-* 現在、クエリエディタは作成中です。
-
 (en)Japanese ver is [here](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md).  
 (ja)この解説の日本語版は[ここ](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md) にあります。  
 
 ## Overview
 
-オープンソースで開発中の[DeltaTraceDB](https://github.com/MasahideMori-SimpleAppli/delta_trace_db)の公式のエディタです。
+オープンソースで開発中の[DeltaTraceDB](https://github.com/MasahideMori-SimpleAppli/delta_trace_db)の公式のエディタです。  
+これはFlutterプロジェクトなので、使いたい環境に合わせてコンパイルして使用してください。
 
 ## Support
 
-There is essentially no support at this time.
+現在のところ、基本的にサポートはありません。
+しかしながら、バグは修正する可能性が高いです。
+バグを見つけた場合はissueを開いてください。
 
 ## License
 

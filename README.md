@@ -1,17 +1,18 @@
 # delta_trace_studio
 
-*The query editor is currently under construction.
-
 (en)Japanese ver is [here](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md).  
 (ja)この解説の日本語版は[ここ](https://github.com/MasahideMori-SimpleAppli/delta_trace_studio/blob/main/README_JA.md)にあります。  
 
 ## Overview
 
-This is the official editor for [DeltaTraceDB](https://github.com/MasahideMori-SimpleAppli/delta_trace_db), which is currently being developed as open source.
+This is the official editor for [DeltaTraceDB](https://github.com/MasahideMori-SimpleAppli/delta_trace_db), which is currently being developed as open source.  
+This is a Flutter project, so please compile and use it in your preferred environment.
 
 ## Support
 
-There is essentially no support at this time.
+There is currently no general support.
+However, bugs will likely be addressed.
+If you find a bug, please open an issue.
 
 ## License
 
