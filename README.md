@@ -6,7 +6,10 @@
 ## Overview
 
 This is the official editor for [DeltaTraceDB](https://github.com/MasahideMori-SimpleAppli/delta_trace_db), which is currently being developed as open source.  
-This is a Flutter project, so please compile and use it in your preferred environment.
+This is a Flutter project, so please compile and use it in your preferred environment.  
+
+Please note that in the current version, if you edit the database directly in the editor, the editing history cannot be output as a log.
+If you need to keep all changes, create a query, run it, and save the query.
 
 ## Support
 
