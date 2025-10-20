@@ -112,7 +112,7 @@ class _DeltaTraceStudioHomeState extends State<DeltaTraceStudioHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DeltaTrace Studio')),
+      appBar: AppBar(title: const Text('DeltaTraceStudio')),
       drawer: UtilDrawer.createDrawer(context),
       body: MainPage(),
     );
