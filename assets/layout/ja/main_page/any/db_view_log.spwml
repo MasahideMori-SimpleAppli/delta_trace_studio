@@ -1,5 +1,5 @@
 (row, vAlign:center, hAlign:center, pT:4, pB:4)
-+(titleM, pL:8, pR:8)このセッションでサーバーに対して行われた
++(titleM, pL:8, pR:8)このセッションでDBに対して行われた
 クエリのリストを表示します。
 +(titleM, mL:8, mR:8)同時表示数:
 +(dropdownBtn2, sid:itemsPerPage)

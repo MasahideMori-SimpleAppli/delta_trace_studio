@@ -1,6 +1,6 @@
 (row, vAlign:center, hAlign:center, pT:4, pB:4)
 +(titleM, pL:8, pR:8)Displays a list of queries made 
-to the server in this session.
+to the DB in this session.
 +(titleM, mL:8, mR:8)Items per page:
 +(dropdownBtn2, sid:itemsPerPage)
 ++(menu, tag:5)5
