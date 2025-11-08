@@ -35,7 +35,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-## Copyright notice
+## Trademarks
 
 The “Dart” name and “Flutter” name are trademarks of Google LLC.  
 *The developer of this package is not Google LLC.
