@@ -93,10 +93,10 @@ packages:
     dependency: "direct main"
     description:
       name: delta_trace_db
-      sha256: "8e2d7aecf4f885446946bb2a46a888b61f133963cc29e3385e1ac0ff92eb9ca8"
+      sha256: e2f3f8fe089bc606dd5d38c5d58c7468c502d261991552f63b45d669322a70f4
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.39"
+    version: "0.0.40"
   fake_async:
     dependency: transitive
     description:
