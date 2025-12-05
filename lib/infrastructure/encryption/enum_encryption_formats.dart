@@ -1,0 +1,1 @@
+enum EnumEncryptionFormats { aesGcm, noEncryption }

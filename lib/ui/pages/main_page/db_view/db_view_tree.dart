@@ -117,7 +117,7 @@ class _DbViewTreeState extends State<DbViewTree> {
     int maxFieldLength = 50,
     int maxSamplesPerDb = 1,
   }) {
-    if(dbData.isEmpty){
+    if (dbData.isEmpty) {
       return ["No data."];
     }
     final List<String> r = [];

@@ -1,6 +1,37 @@
 {
-  "aboutApp" : "About DeltaTraceDB",
+  "aboutApp": "About DeltaTraceDB",
   "license": "License",
-  "changeLanguage" : "日本語",
-  "enterQueryCode" : "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here."
+  "changeLanguage": "日本語",
+  "enterQueryCode": "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here.",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "yes": "Yes",
+  "no": "No",
+  "@dialog_section": {
+    "description": "------ Dialog Labels ------"
+  },
+  "dialog_fileFormatTitle": "Select File Format",
+  "@dialog_fileFormatTitle": {
+    "description": "Title: Dialog allowing the user to select a file format"
+  },
+  "dialog_loadJson": "Load as JSON (plaintext)",
+  "@dialog_loadJson": {
+    "description": "Menu item for loading plaintext JSON"
+  },
+  "dialog_decryptAesGcm": "Decrypt as AES-GCM (encrypted)",
+  "@dialog_decryptAesGcm": {
+    "description": "Menu item for decrypting using AES-GCM"
+  },
+  "dialog_aesGcmTitle": "Enter AES-GCM HEX Key",
+  "@dialog_aesGcmTitle": {
+    "description": "Title: Prompts the user to enter the HEX key"
+  },
+  "exportDatabaseTitle": "Export Settings",
+  "exportDatabaseDescription": "Select how the file name should be generated.",
+  "useLocalTime": "Use local time",
+  "useLocalTimeSubtitle": "If enabled, the local time will be used in the file name.",
+  "useMicroseconds": "Use microseconds",
+  "useMicrosecondsSubtitle": "If enabled, the file name will include microseconds (6 digits).",
+  "useAesGcm": "Encrypt with AES-GCM",
+  "useAesGcmSubtitle": "If enabled, the data will be encrypted with AES-GCM."
 }

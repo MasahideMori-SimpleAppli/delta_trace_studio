@@ -25,7 +25,6 @@ class _DbViewListState extends State<DbViewList> {
   final StateManager _sm = StateManager();
   final StateManager _filterSm = StateManager();
   static const int _defItemsPerPage = 10;
-  String? _selectedTarget;
   int _itemsPerPage = _defItemsPerPage;
   int _pageIndex = 0;
   final ScrollController _scCtrl = ScrollController();
@@ -105,10 +104,10 @@ class _DbViewListState extends State<DbViewList> {
       "targetCollectionDDBtn",
       _buildStringDropdown(
         items: localDB.raw.keys.toList(),
-        selectedValue: _selectedTarget,
+        selectedValue: selectedTarget,
         onChanged: (String? s) {
           setState(() {
-            _selectedTarget = s;
+            selectedTarget = s;
             _resetFilter();
           });
         },
@@ -145,8 +144,8 @@ class _DbViewListState extends State<DbViewList> {
     b.replaceUnderStructure(
       "collectionItems",
       (_filterData.isFilterEnabled())
-          ? _getCollectionItemsForFilter(_selectedTarget)
-          : _getCollectionItemsNonFilter(_selectedTarget),
+          ? _getCollectionItemsForFilter(selectedTarget)
+          : _getCollectionItemsNonFilter(selectedTarget),
     );
     // filter
     BtnElement filterBtn = b.getElement("filter") as BtnElement;
@@ -168,7 +167,7 @@ class _DbViewListState extends State<DbViewList> {
     // removeCollection
     BtnElement removeCollectionBtn =
         b.getElement("removeCollection") as BtnElement;
-    if (_selectedTarget == null) {
+    if (selectedTarget == null) {
       removeCollectionBtn.setEnabled(false);
     }
     removeCollectionBtn.setCallback(() {
@@ -191,9 +190,9 @@ class _DbViewListState extends State<DbViewList> {
                 onPressed: () {
                   Navigator.of(ctx).pop(); // ダイアログを閉じる
                   setState(() {
-                    if (_selectedTarget != null) {
-                      localDB.removeCollection(_selectedTarget!);
-                      _selectedTarget = null;
+                    if (selectedTarget != null) {
+                      localDB.removeCollection(selectedTarget!);
+                      selectedTarget = null;
                       _resetFilter();
                     }
                   });
@@ -220,7 +219,7 @@ class _DbViewListState extends State<DbViewList> {
     if (_filterData.isFilterEnabled()) {
       _filteredItem.clear();
       int index = 0;
-      for (Map<String, dynamic> i in localDB.collection(_selectedTarget!).raw) {
+      for (Map<String, dynamic> i in localDB.collection(selectedTarget!).raw) {
         if (_filterData.node1 != null && _filterData.node2 == null) {
           if (_filterData.node1!.evaluate(i)) {
             _filteredItem.add(FilteredItem(index, i));
@@ -261,7 +260,7 @@ class _DbViewListState extends State<DbViewList> {
   /// トータルページ数を返します。フィルタが有効な場合はフィルタされたターゲットも計算されます。
   int _getTotalPages() {
     if (_filterData.isFilterEnabled()) {
-      int totalPages = _selectedTarget == null
+      int totalPages = selectedTarget == null
           ? 1
           : (_filteredItem.length / _itemsPerPage).ceil();
       if (totalPages == 0) {
@@ -269,10 +268,9 @@ class _DbViewListState extends State<DbViewList> {
       }
       return totalPages;
     } else {
-      int totalPages = _selectedTarget == null
+      int totalPages = selectedTarget == null
           ? 1
-          : (localDB.collection(_selectedTarget!).length / _itemsPerPage)
-                .ceil();
+          : (localDB.collection(selectedTarget!).length / _itemsPerPage).ceil();
       if (totalPages == 0) {
         totalPages = 1;
       }

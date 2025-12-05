@@ -1,3 +1,1 @@
-enum EnumDbCollection{
-  dbViewMode,
-}
+enum EnumDbCollection { dbViewMode }

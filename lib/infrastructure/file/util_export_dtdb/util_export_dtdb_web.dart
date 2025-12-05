@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:intl/intl.dart';
@@ -25,20 +24,34 @@ class UtilExportDTDBImpl {
   ///
   /// * [data] : dtdb data.
   /// * [isLocalTime] : If false, save timestamp create from UTC time.
-  static Future<void> exportDTDB(Map<String, dynamic> data, bool isLocalTime) async {
-    final jsonStr = jsonEncode(data);
+  /// * [useMicroSec] : If true, timestamp includes microseconds (6 digits). Otherwise milliseconds (3 digits).
+  static Future<void> exportDTDB(
+    List<int> data,
+    bool isLocalTime,
+    bool useMicroSec,
+  ) async {
     String prefix = "backup";
     String exp = ".dtdb";
     // 現在時刻
     DateTime now = isLocalTime ? DateTime.now() : DateTime.now().toUtc();
-    // タイムスタンプ生成 (YYYYMMDDTHHMMSSfff)
-    String timestamp = DateFormat("yyyyMMdd'T'HHmmssSSS").format(now);
+    // --- 基本フォーマット（秒まで） ---
+    String base = DateFormat("yyyyMMdd'T'HHmmss").format(now);
+    // --- ミリ秒 or マイクロ秒の生成 ---
+    String fraction;
+    if (useMicroSec) {
+      // microseconds (000000〜999999)
+      fraction = now.microsecond.toString().padLeft(6, '0');
+    } else {
+      // milliseconds (000〜999)
+      fraction = now.millisecond.toString().padLeft(3, '0');
+    }
+    // --- 完成した timestamp ---
+    String timestamp = "$base$fraction";
     // UUID生成 (先頭8文字)
     String uniqueId = Uuid().v4().replaceAll('-', '').substring(0, 8);
     // ファイル名生成
     String fileName = "${prefix}_${timestamp}_$uniqueId$exp";
-    final Uint8List bytes = utf8.encode(jsonStr);
-    final url = web.URL.createObjectURL(Blob.fromBytes(bytes.toList()));
+    final url = web.URL.createObjectURL(Blob.fromBytes(data));
     final JSObject document =
         globalContext.getProperty('document'.toJS) as JSObject;
     final JSObject anchor =

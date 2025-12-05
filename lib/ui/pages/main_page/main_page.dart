@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:delta_trace_db/delta_trace_db.dart';
+import 'package:delta_trace_studio/infrastructure/encryption/aes_gcm.dart';
+import 'package:delta_trace_studio/infrastructure/encryption/enum_encryption_formats.dart';
 import 'package:delta_trace_studio/infrastructure/file/util_export_dtdb.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view.dart';
@@ -28,7 +30,13 @@ class _MainPageState extends State<MainPage> {
   // The manager class for SpWML.
   final StateManager _sm = StateManager();
 
-  final TextEditingController _tecJSON = TextEditingController(text: "");
+  final _tecJSON = TextEditingController(text: "");
+  final _tecAesGcmKey = TextEditingController();
+
+  // DBの出力名のフォーマットスイッチ関係
+  bool isLocalTime = true; // default
+  bool useMicroseconds = false; // default
+  bool useAesGcm = false; // default (平文JSONが基準)
 
   // result code.
   String _resultStr = "Empty.";
@@ -43,6 +51,7 @@ class _MainPageState extends State<MainPage> {
   void dispose() {
     _sm.dispose();
     _tecJSON.dispose();
+    _tecAesGcmKey.dispose();
     super.dispose();
   }
 
@@ -98,8 +107,7 @@ class _MainPageState extends State<MainPage> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-          child: Text(AppLocalizations.of(context)!.enterQueryCode,
-          ),
+          child: Text(AppLocalizations.of(context)!.enterQueryCode),
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -166,12 +174,44 @@ class _MainPageState extends State<MainPage> {
           return;
         }
         final bytes = await result.readAsBytes();
-        final content = utf8.decode(bytes); // to JSON string
-        final data = jsonDecode(content); // JSON → Map
-        setState(() {
-          localDB = DeltaTraceDatabase.fromDict(data);
-          appliedQueries.clear();
-        });
+        // ダイアログで選択してもらう
+        if (mounted) {
+          final EnumEncryptionFormats? format = await showLoadFormatDialog(
+            context,
+          );
+          if (format == null) {
+            return;
+          }
+          try {
+            if (format == EnumEncryptionFormats.noEncryption) {
+              final jsonStr = utf8.decode(bytes);
+              final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+              setState(() {
+                selectedTarget = null;
+                localDB = DeltaTraceDatabase.fromDict(data);
+                appliedQueries.clear();
+              });
+            } else if (format == EnumEncryptionFormats.aesGcm) {
+              if (mounted) {
+                final String? hexKey = await showHEXKeyInputDialog(context);
+                if (hexKey != null) {
+                  final decrypted = AesGcm().decryptJson(bytes, hexKey);
+                  setState(() {
+                    selectedTarget = null;
+                    localDB = DeltaTraceDatabase.fromDict(decrypted);
+                    appliedQueries.clear();
+                  });
+                }
+              }
+            }
+          } catch (e) {
+            if (mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Error: $e")));
+            }
+          }
+        }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -185,37 +225,36 @@ class _MainPageState extends State<MainPage> {
     });
     BtnElement exportDB = b.getElement("exportDB") as BtnElement;
     exportDB.setCallback(() async {
-      final bool? isLocalTime = await showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Export Database"),
-            content: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 600,
-                minWidth: 320,
-              ),
-              child: Text(
-                "Can I use local time in the file name?\nIf you select No, UTC will be used.",
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("No"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: const Text("Yes"),
-              ),
-            ],
+      try {
+        final result = await showExportOptionsDialog(context);
+        if (result == null) return; // canceled
+        // AES-GCM を使う場合はキー入力ダイアログへ
+        if (result.useAesGcm) {
+          if (mounted) {
+            final String? hexKey = await showHEXKeyInputDialog(context);
+            if (hexKey == null) return; // キャンセル
+            await UtilExportDTDB.exportDTDB(
+              AesGcm().encryptJson(localDB.toDict(), hexKey).toList(),
+              result.isLocalTime,
+              result.useMicroseconds,
+            );
+          }
+        } else {
+          await UtilExportDTDB.exportDTDB(
+            utf8.encode(jsonEncode(localDB.toDict())).toList(),
+            result.isLocalTime,
+            result.useMicroseconds,
           );
-        },
-      );
-      if (isLocalTime != null) {
-        await UtilExportDTDB.exportDTDB(localDB.toDict(), isLocalTime);
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error: $e"),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     });
 
@@ -232,6 +271,149 @@ class _MainPageState extends State<MainPage> {
 
     // right bottom
     b.replace("dbView", DbView());
+  }
+
+  Future<({bool isLocalTime, bool useMicroseconds, bool useAesGcm})?>
+  showExportOptionsDialog(BuildContext context) {
+    return showDialog<
+      ({bool isLocalTime, bool useMicroseconds, bool useAesGcm})
+    >(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.exportDatabaseTitle),
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600, minWidth: 320),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.exportDatabaseDescription,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ---- Switch 1: Local time? ----
+                    SwitchListTile(
+                      title: Text(AppLocalizations.of(context)!.useLocalTime),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.useLocalTimeSubtitle,
+                      ),
+                      value: isLocalTime,
+                      onChanged: (v) {
+                        setState(() => isLocalTime = v);
+                      },
+                    ),
+
+                    // ---- Switch 2: Microseconds? ----
+                    SwitchListTile(
+                      title: Text(
+                        AppLocalizations.of(context)!.useMicroseconds,
+                      ),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.useMicrosecondsSubtitle,
+                      ),
+                      value: useMicroseconds,
+                      onChanged: (v) {
+                        setState(() => useMicroseconds = v);
+                      },
+                    ),
+
+                    // ---- Switch 3: AES-GCM encryption? ----
+                    SwitchListTile(
+                      title: Text(AppLocalizations.of(context)!.useAesGcm),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.useAesGcmSubtitle,
+                      ),
+                      value: useAesGcm,
+                      onChanged: (v) {
+                        setState(() => useAesGcm = v);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, null),
+                  child: Text(AppLocalizations.of(context)!.cancel),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, (
+                      isLocalTime: isLocalTime,
+                      useMicroseconds: useMicroseconds,
+                      useAesGcm: useAesGcm,
+                    ));
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<EnumEncryptionFormats?> showLoadFormatDialog(
+    BuildContext context,
+  ) async {
+    return showDialog<EnumEncryptionFormats>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(AppLocalizations.of(context)!.dialog_fileFormatTitle),
+          children: [
+            SimpleDialogOption(
+              child: Text(AppLocalizations.of(context)!.dialog_loadJson),
+              onPressed: () =>
+                  Navigator.pop(context, EnumEncryptionFormats.noEncryption),
+            ),
+            SimpleDialogOption(
+              child: Text(AppLocalizations.of(context)!.dialog_decryptAesGcm),
+              onPressed: () =>
+                  Navigator.pop(context, EnumEncryptionFormats.aesGcm),
+            ),
+            SimpleDialogOption(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () => Navigator.pop(context, null),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String?> showHEXKeyInputDialog(BuildContext context) async {
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.dialog_aesGcmTitle),
+          content: TextField(
+            controller: _tecAesGcmKey,
+            decoration: InputDecoration(
+              labelText: "Hex key (16 / 24 / 32 bytes)",
+            ),
+            maxLines: 1,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(context, _tecAesGcmKey.text.trim()),
+              child: Text(AppLocalizations.of(context)!.ok),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _setToClipboard(String text) async {

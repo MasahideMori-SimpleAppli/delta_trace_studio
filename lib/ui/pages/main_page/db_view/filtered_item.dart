@@ -1,6 +1,6 @@
-class FilteredItem{
+class FilteredItem {
   int index;
-  Map<String,dynamic> item;
+  Map<String, dynamic> item;
 
   /// * [index] : The item index in db.
   /// * [item] : The item value.

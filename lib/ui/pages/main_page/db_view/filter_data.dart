@@ -25,7 +25,7 @@ class FilterData extends CloneableFile {
   }
 
   /// Enable filter, return true;
-  bool isFilterEnabled(){
+  bool isFilterEnabled() {
     return node1 != null || node2 != null;
   }
 }

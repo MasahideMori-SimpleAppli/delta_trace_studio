@@ -1,6 +1,1 @@
-enum EnumViewMode{
-  howToUse,
-  treeView,
-  listView,
-  logView
-}
+enum EnumViewMode { howToUse, treeView, listView, logView }

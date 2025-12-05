@@ -12,23 +12,19 @@ class UtilDrawer {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.teal,
-            ),
+            decoration: BoxDecoration(color: Colors.teal),
             child: const Text(
               FApp.appName,
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-              ),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
           ListTile(
             title: Text(AppLocalizations.of(context)!.aboutApp),
             onTap: () async {
               Navigator.pop(context);
-              final Uri url =
-                  Uri.parse("https://pub.dev/packages/delta_trace_db");
+              final Uri url = Uri.parse(
+                "https://pub.dev/packages/delta_trace_db",
+              );
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               }
@@ -38,7 +34,8 @@ class UtilDrawer {
             title: Text(AppLocalizations.of(context)!.changeLanguage),
             onTap: () async {
               if (context.mounted) {
-                final Locale now = LocaleManager.of(context)?.getLocale() ??
+                final Locale now =
+                    LocaleManager.of(context)?.getLocale() ??
                     const Locale("en");
                 if (now == const Locale("en")) {
                   LocaleManager.of(context)?.changeLocale(const Locale("ja"));

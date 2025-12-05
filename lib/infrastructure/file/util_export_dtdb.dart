@@ -2,7 +2,11 @@ import 'package:delta_trace_studio/infrastructure/file/util_export_dtdb/util_exp
     if (dart.library.js) 'package:delta_trace_studio/infrastructure/file/util_export_dtdb/util_export_dtdb_web.dart';
 
 class UtilExportDTDB {
-  static Future<void> exportDTDB(Map<String, dynamic> data, bool isLocalTime) async {
-    return UtilExportDTDBImpl.exportDTDB(data, isLocalTime);
+  static Future<void> exportDTDB(
+    List<int> data,
+    bool isLocalTime,
+    bool useMicroSec,
+  ) async {
+    return UtilExportDTDBImpl.exportDTDB(data, isLocalTime, useMicroSec);
   }
 }

@@ -1,7 +1,42 @@
 {
   "@@locale": "ja",
-  "aboutApp" : "DeltaTraceDBについて",
+  "aboutApp": "DeltaTraceDBについて",
   "license": "License",
-  "changeLanguage" : "English",
-  "enterQueryCode" : "IDEで作成したクエリを「debugPrint(jsonEncode(query.toDict()))」した結果を貼り付けると実行できます。"
+  "changeLanguage": "English",
+  "cancel": "キャンセル",
+  "ok": "決定",
+  "yes": "はい",
+  "no": "いいえ",
+  "enterQueryCode": "IDEで作成したクエリを「debugPrint(jsonEncode(query.toDict()))」した結果を貼り付けると実行できます。",
+  "@dialog_section": {
+    "description": "------ Dialog Labels ------"
+  },
+  "dialog_fileUTCSelectionTitle": "ファイル形式を選択",
+  "@dialog_fileUTCSelectionTitle": {
+    "description": "タイトル：ユーザーにタイトルをUTCでつけるか選択させるタイトル"
+  },
+  "dialog_fileFormatTitle": "ファイル形式を選択",
+  "@dialog_fileFormatTitle": {
+    "description": "タイトル：ユーザーに形式を選ばせるダイアログ"
+  },
+  "dialog_loadJson": "JSON（平文）として読み込む",
+  "@dialog_loadJson": {
+    "description": "平文JSONを読み込むメニュー項目"
+  },
+  "dialog_decryptAesGcm": "AES-GCM（暗号化）として復号する",
+  "@dialog_decryptAesGcm": {
+    "description": "AES-GCMとして復号するメニュー項目"
+  },
+  "dialog_aesGcmTitle": "AES-GCM の HEX キー入力",
+  "@dialog_aesGcmTitle": {
+    "description": "タイトル：ユーザーにHEXキーを入力させるタイトル"
+  },
+  "exportDatabaseTitle": "エクスポート設定",
+  "exportDatabaseDescription": "ファイル名の生成方法を選択してください。",
+  "useLocalTime": "ローカルタイムを使用",
+  "useLocalTimeSubtitle": "オンにすると、現在のローカル時刻でファイル名を生成します。",
+  "useMicroseconds": "マイクロ秒を使用",
+  "useMicrosecondsSubtitle": "オンにすると、ファイル名にマイクロ秒(6桁)を含めます。",
+  "useAesGcm": "AES-GCM で暗号化する",
+  "useAesGcmSubtitle": "オンにすると、AES-GCM を使用して暗号化して保存します。"
 }
