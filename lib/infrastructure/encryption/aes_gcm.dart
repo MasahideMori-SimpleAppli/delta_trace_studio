@@ -46,6 +46,9 @@ class AesGcm {
   ///
   /// (ja) AES GCMで復号化します。nonce(12 bytes)はバイトコード先頭に付与されている方式として読み込みます。
   /// 現在、AADには対応していません。
+  ///
+  /// * [data] : The encrypted bytes, which must be formatted with a leading nonce.
+  /// * [keyHex] : AES key (32 bytes will be AES-256)
   Map<String, dynamic> decryptJson(Uint8List data, String keyHex) {
     final key = Uint8List.fromList(
       List<int>.generate(
