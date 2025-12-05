@@ -134,6 +134,12 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         try {
           final result = localDB.executeQueryObject(jsonObj);
+          // 存在しないコレクションを参照しようとした場合は参照をnullにリセットする。
+          if(selectedTarget!=null){
+            if(localDB.findCollection(selectedTarget!) == null){
+              selectedTarget = null;
+            }
+          }
           _resultStr = JsonEncoder.withIndent('  ').convert(result.toDict());
           if (result.isSuccess) {
             appliedQueries.add(QueryWithTime(jsonObj, DateTime.now().toUtc()));

@@ -16,7 +16,7 @@ final List<QueryWithTime> appliedQueries = [];
 // 状態管理用のDB。
 final stateDB = DeltaTraceDatabase();
 // db_view_listのリストの選択状態。
-String? selectedTarget = null;
+String? selectedTarget;
 
 void main() {
   // test code
