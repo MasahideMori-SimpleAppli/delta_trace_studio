@@ -1,6 +1,6 @@
 import 'package:file_state_manager/file_state_manager.dart';
 
-import 'enum_view_mode.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
 
 class ViewMode extends CloneableFile {
   EnumViewMode viewMode;

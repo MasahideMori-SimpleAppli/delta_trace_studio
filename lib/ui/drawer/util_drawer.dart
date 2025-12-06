@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:simple_locale/simple_locale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../application/f_app.dart';
-import '../../src/generated/i18n/app_localizations.dart';
+import 'package:delta_trace_studio/application/f_app.dart';
+import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 
 class UtilDrawer {
   /// return drawer

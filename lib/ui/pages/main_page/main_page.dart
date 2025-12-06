@@ -16,8 +16,8 @@ import 'package:simple_locale/simple_locale.dart';
 import 'package:simple_managers/simple_managers.dart';
 import 'package:simple_widget_markup/simple_widget_markup.dart';
 
-import '../../../main.dart';
-import 'enum_db_collection.dart';
+import 'package:delta_trace_studio/main.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/enum_db_collection.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

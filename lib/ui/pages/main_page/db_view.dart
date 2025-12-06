@@ -8,7 +8,7 @@ import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dar
 import 'package:delta_trace_studio/ui/pages/main_page/enum_db_collection.dart';
 import 'package:flutter/material.dart';
 
-import '../../../main.dart';
+import 'package:delta_trace_studio/main.dart';
 
 class DbView extends StatefulWidget {
   const DbView({super.key});

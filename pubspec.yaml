@@ -33,7 +33,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  simple_lint: ^0.0.3
 
 flutter:
   generate: true
