@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/main.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/db_view/filter_data.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/db_view/filter_dialog.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/db_view/filtered_item.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_data.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_dialog.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filtered_item.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/merge_dialog.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/pagination_widget.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_locale/simple_locale.dart';
@@ -164,6 +166,56 @@ class _DbViewListState extends State<DbViewList> {
     if (_filterData.isFilterEnabled()) {
       filterBtn.setBtnColor(Colors.red);
     }
+    // merge
+    BtnElement mergeBtn = b.getElement("merge") as BtnElement;
+    mergeBtn.setCallback(() async {
+      final source = [...localDB.raw.keys].where((x) => x != selectedTarget);
+      final MergeQueryParams? mqp = await showMergeQueryParamsDialog(
+        context,
+        initial: MergeQueryParams(
+          base: selectedTarget ?? "",
+          source: source.toList(),
+          relationKey: "",
+          sourceKeys: [],
+          output: "output_collection_name",
+          dslTmp: {},
+          serialBase: selectedTarget,
+        ),
+      );
+      if (mqp != null) {
+        final now = DateTime.now().toUtc();
+        final Query mergeQuery = RawQueryBuilder.merge(
+          mergeQueryParams: mqp,
+          cause: Cause(
+            who: Actor(EnumActorType.system, "DeltaTraceStudio"),
+            when: TemporalTrace(
+              nodes: [
+                TimestampNode(timestamp: now, location: "DeltaTraceStudio App"),
+              ],
+            ),
+            what: "Merging collections is performed through user UI actions.",
+            why: "Run merge function.",
+            from: "DeltaTraceStudio App",
+          ),
+        ).build();
+        final r = localDB.executeQuery(mergeQuery);
+        if (r.isSuccess) {
+          setState(() {
+            selectedTarget = mqp.output;
+            appliedQueries.add(QueryWithTime(mergeQuery.toDict(), now));
+          });
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("The operation failed."),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        }
+      }
+    });
     // removeCollection
     BtnElement removeCollectionBtn =
         b.getElement("removeCollection") as BtnElement;
@@ -191,9 +243,46 @@ class _DbViewListState extends State<DbViewList> {
                   Navigator.of(ctx).pop(); // ダイアログを閉じる
                   setState(() {
                     if (selectedTarget != null) {
-                      localDB.removeCollection(selectedTarget!);
-                      selectedTarget = null;
-                      _resetFilter();
+                      final now = DateTime.now().toUtc();
+                      final removeCollectionQuery =
+                          RawQueryBuilder.removeCollection(
+                            target: selectedTarget!,
+                            cause: Cause(
+                              who: Actor(
+                                EnumActorType.system,
+                                "DeltaTraceStudio",
+                              ),
+                              when: TemporalTrace(
+                                nodes: [
+                                  TimestampNode(
+                                    timestamp: now,
+                                    location: "DeltaTraceStudio App",
+                                  ),
+                                ],
+                              ),
+                              what:
+                                  "removeCollections is performed through user UI actions.",
+                              why: "Run removeCollection function.",
+                              from: "DeltaTraceStudio App",
+                            ),
+                          ).build();
+                      final r = localDB.executeQuery(removeCollectionQuery);
+                      if (r.isSuccess) {
+                        appliedQueries.add(
+                          QueryWithTime(removeCollectionQuery.toDict(), now),
+                        );
+                        selectedTarget = null;
+                        _resetFilter();
+                      } else {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("The operation failed."),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      }
                     }
                   });
                 },

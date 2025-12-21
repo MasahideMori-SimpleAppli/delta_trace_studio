@@ -10,6 +10,7 @@
 ++(menu, tag:100)100
 ++(menu, tag:200)200
 +(btn, type:icon, iconNum:0xf068, mL:16, sid:filter)
++(btn, type:icon, iconNum:0xf0352, mL:8, sid:merge)
 +(btn, type:icon, iconNum:0xefaa, mL:8, mR:8, sid:removeCollection)
 (scroll, wt:1, sid:scrollView)
 +(col, mT:2, pAll:8, sid:collectionItems)

@@ -1,5 +1,5 @@
 import 'package:delta_trace_db/delta_trace_db.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/db_view/filter_data.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_data.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_locale/simple_locale.dart';
 
