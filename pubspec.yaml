@@ -20,11 +20,11 @@ dependencies:
   url_launcher: ^6.1.5
 
   # original packages
-  simple_widget_markup: ^45.1.0
+  simple_widget_markup: any
   simple_managers: any
   simple_locale: any
-  file_state_manager: ^2.0.0
-  delta_trace_db: ^0.1.1
+  file_state_manager: any
+  delta_trace_db: ^0.1.2
 
   # other packages
   uuid: ^4.5.1
@@ -33,7 +33,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  simple_lint: ^0.0.3
+  simple_lint: ^2.0.0
 
 flutter:
   generate: true

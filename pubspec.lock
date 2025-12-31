@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: delta_trace_db
-      sha256: b58d7970adb36f5e992d6de4dbb09a7502ff23463f1a08415edea9ca9782b01d
+      sha256: e7636fee2aa304b05e33afe91542ead3e1102cdc545ec85e36355a95153166d3
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   fake_async:
     dependency: transitive
     description:
@@ -189,10 +189,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_state_manager
-      sha256: a64f7dfe52e45bb1bb1a0e357ab6d38efddc361f33003c0c0a9b78bf9cf0731d
+      sha256: "16d8738c097d7988fafd81e33ca42c40a21ec8e37333440412a27ebacf824ada"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.0"
   fixnum:
     dependency: transitive
     description:
@@ -257,10 +257,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "51555e36056541237b15b57afc31a0f53d4f9aefd9bd00873a6dc0090e54e332"
+      sha256: "492bd52f6c4fbb6ee41f781ff27765ce5f627910e1e0cbecfa3d9add5562604c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.0"
+    version: "4.7.2"
   intl:
     dependency: "direct main"
     description:
@@ -385,18 +385,18 @@ packages:
     dependency: transitive
     description:
       name: simple_block_markup_language
-      sha256: "9b4a01e0f21973ba7f9abb098e091c313e1add99008959652d85e8bf880e0f99"
+      sha256: "6a439fa6e1125140cdae989a05b3eea72c2d56db523c37f291739e5ae2055782"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.3.1"
   simple_lint:
     dependency: "direct dev"
     description:
       name: simple_lint
-      sha256: d1785c64f6afb6e1fc2834cc7141b0be05d02b668c8a4726a6dbf0b364e6aaa7
+      sha256: "4ec06197bab8230adada975f027a309ed21366e57850c2a743599b292a6390d6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "2.0.0"
   simple_locale:
     dependency: "direct main"
     description:
@@ -409,18 +409,18 @@ packages:
     dependency: "direct main"
     description:
       name: simple_managers
-      sha256: "3e26f76bd9b8c589538b7c1ea45fb1e5c2722f45bf9a7101bfffca37fdaff62b"
+      sha256: "42609e70f99c311ed29773aac5c73ff3305ac9a741e3497175a429cd60fa0ee2"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.4"
+    version: "7.0.5"
   simple_widget_markup:
     dependency: "direct main"
     description:
       name: simple_widget_markup
-      sha256: bd1ec79f6b1ac2e73ba4ea12db661ceaa7b24599fc192cc2b19414785e18f8ad
+      sha256: bbe0a75c25a649154eaa03bc5930da5e7baba3932ef8c840e667bc9d89e43454
       url: "https://pub.dev"
     source: hosted
-    version: "45.1.0"
+    version: "46.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
