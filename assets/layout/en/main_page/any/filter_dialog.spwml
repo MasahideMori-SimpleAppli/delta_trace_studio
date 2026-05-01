@@ -25,6 +25,7 @@ Enabled filters are applied with an And condition.
 ++(menu, tag:floatEpsilon12_)Float epsilon12
 ++(menu, tag:boolean_)boolean
 ++(menu, tag:string_)String
+++(menu, tag:stringIgnoreCase_)String ignore case
 +(switchBtn, mL:12, mT:12, type:check, sid:switch1)
 (row, hAlign:center, pAll:8)
 +(text, mT:22) 2.
@@ -50,4 +51,5 @@ Enabled filters are applied with an And condition.
 ++(menu, tag:floatEpsilon12_)Float epsilon12
 ++(menu, tag:boolean_)boolean
 ++(menu, tag:string_)String
+++(menu, tag:stringIgnoreCase_)String ignore case
 +(switchBtn, mL:12, mT:12, type:check, sid:switch2)

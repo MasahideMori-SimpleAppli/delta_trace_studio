@@ -47,6 +47,8 @@ class _FilterDialogState extends State<FilterDialog> {
     );
     String textV = widget.sm.tfm.getText(valueKey);
     switch (t) {
+      // ここではユーザー入力の型だけを正しいものにする必要がある。
+      // 実際の型変換はノードオブジェクトの計算時に行われる。
       case EnumValueType.auto_:
         throw ArgumentError();
       case EnumValueType.datetime_:
@@ -59,9 +61,8 @@ class _FilterDialogState extends State<FilterDialog> {
       case EnumValueType.boolean_:
         return bool.parse(textV);
       case EnumValueType.string_:
-        return textV;
       case EnumValueType.stringIgnoreCase_:
-        return textV.toLowerCase();
+        return textV;
     }
   }
 
@@ -77,6 +78,9 @@ class _FilterDialogState extends State<FilterDialog> {
       EnumNodeType nType1 = EnumNodeType.values.byName(
         widget.sm.tsm.getSelection(nodeKey)!,
       );
+      EnumValueType t = EnumValueType.values.byName(
+        widget.sm.tsm.getSelection(typeKey)!,
+      );
       // 値を変換しつつ取得。
       String target = widget.sm.tfm.getText(targetKey);
       dynamic v = _getValue(valueKey, typeKey);
@@ -86,17 +90,17 @@ class _FilterDialogState extends State<FilterDialog> {
         case EnumNodeType.not_:
           throw ArgumentError();
         case EnumNodeType.equals_:
-          return FieldEquals(target, v);
+          return FieldEquals(target, v, vType: t);
         case EnumNodeType.notEquals_:
-          return FieldNotEquals(target, v);
+          return FieldNotEquals(target, v, vType: t);
         case EnumNodeType.greaterThan_:
-          return FieldGreaterThan(target, v);
+          return FieldGreaterThan(target, v, vType: t);
         case EnumNodeType.lessThan_:
-          return FieldLessThan(target, v);
+          return FieldLessThan(target, v, vType: t);
         case EnumNodeType.greaterThanOrEqual_:
-          return FieldGreaterThanOrEqual(target, v);
+          return FieldGreaterThanOrEqual(target, v, vType: t);
         case EnumNodeType.lessThanOrEqual_:
-          return FieldLessThanOrEqual(target, v);
+          return FieldLessThanOrEqual(target, v, vType: t);
         case EnumNodeType.regex_:
           return FieldMatchesRegex(target, v);
         case EnumNodeType.contains_:
