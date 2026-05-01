@@ -24,7 +24,7 @@ dependencies:
   simple_managers: any
   simple_locale: any
   file_state_manager: any
-  delta_trace_db: ^0.1.2
+  delta_trace_db: 0.1.6
 
   # other packages
   uuid: ^4.5.1

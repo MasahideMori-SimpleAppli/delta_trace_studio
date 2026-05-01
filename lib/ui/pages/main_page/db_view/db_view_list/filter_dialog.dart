@@ -60,6 +60,8 @@ class _FilterDialogState extends State<FilterDialog> {
         return bool.parse(textV);
       case EnumValueType.string_:
         return textV;
+      case EnumValueType.stringIgnoreCase_:
+        return textV.toLowerCase();
     }
   }
 
