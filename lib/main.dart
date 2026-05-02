@@ -12,6 +12,7 @@ DeltaTraceDatabase localDB = DeltaTraceDatabase();
 final List<QueryWithTime> appliedQueries = [];
 String? selectedTarget;
 String? dbFileName;
+int dbVersion = 0;
 
 final queryTextController = TextEditingController();
 final queryResultNotifier = ValueNotifier<String>("Empty.");

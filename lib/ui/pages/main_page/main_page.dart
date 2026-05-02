@@ -279,6 +279,7 @@ class _MainPageState extends State<MainPage> {
           setState(() {
             localDB = newDB;
             dbFileName = file.name;
+            dbVersion++;
             selectedTarget =
                 newDB.raw.keys.isNotEmpty ? newDB.raw.keys.first : null;
             appliedQueries.clear();
@@ -293,6 +294,7 @@ class _MainPageState extends State<MainPage> {
             setState(() {
               localDB = newDB;
               dbFileName = file.name;
+              dbVersion++;
               selectedTarget =
                   newDB.raw.keys.isNotEmpty ? newDB.raw.keys.first : null;
               appliedQueries.clear();
