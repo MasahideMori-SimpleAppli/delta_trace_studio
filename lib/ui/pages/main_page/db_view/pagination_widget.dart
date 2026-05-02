@@ -68,23 +68,32 @@ class PaginationWidget extends StatelessWidget {
               );
             }
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: ElevatedButton(
-                onPressed: p == pageNum ? null : () => callback(p),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: p == pageNum
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey[300],
-                  foregroundColor: p == pageNum ? Colors.white : Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  minimumSize: const Size(36, 36),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text("$p"),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: p == pageNum
+                  ? FilledButton(
+                      onPressed: null,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        minimumSize: const Size(36, 36),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text("$p"),
+                    )
+                  : OutlinedButton(
+                      onPressed: () => callback(p),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        minimumSize: const Size(36, 36),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text("$p"),
+                    ),
             );
           }).toList(),
         ),

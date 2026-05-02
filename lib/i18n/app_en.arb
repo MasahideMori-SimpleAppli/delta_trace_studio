@@ -5,6 +5,7 @@
   "enterQueryCode": "You can paste the result of debugPrint(jsonEncode(query.toDict())) in your IDE here.",
   "cancel": "Cancel",
   "ok": "OK",
+  "close": "Close",
   "yes": "Yes",
   "no": "No",
   "@dialog_section": {
@@ -33,5 +34,98 @@
   "useMicroseconds": "Use microseconds",
   "useMicrosecondsSubtitle": "If enabled, the file name will include microseconds (6 digits).",
   "useAesGcm": "Encrypt with AES-GCM",
-  "useAesGcmSubtitle": "If enabled, the data will be encrypted with AES-GCM."
+  "useAesGcmSubtitle": "If enabled, the data will be encrypted with AES-GCM.",
+  "@main_section": {
+    "description": "------ Main Page ------"
+  },
+  "dbData": "DB Data",
+  "viewModeLabel": "View mode:",
+  "viewModeList": "List",
+  "viewModeTree": "Tree",
+  "viewModeQuery": "Query",
+  "importDb": "Import DB",
+  "exportDb": "Export DB",
+  "decryptFile": "Decrypt file",
+  "decryptResultTitle": "Decrypted content",
+  "noDbLoaded": "No database loaded.",
+  "importDbHint": "Import a .dtdb file to get started.",
+  "@tree_section": {
+    "description": "------ Tree View ------"
+  },
+  "treeSampling": "Sampling:",
+  "treeTextLength": "Text length:",
+  "noData": "No data.",
+  "@list_section": {
+    "description": "------ List View ------"
+  },
+  "listTarget": "Target:",
+  "listPerPage": "Per page:",
+  "listPleaseSelect": "Please select",
+  "listPleaseSelectCollection": "Please select target collection.",
+  "listSearchHint": "Search (full-text across all keys)",
+  "listSortBy": "Sort:",
+  "sortAscending": "Ascending",
+  "sortDescending": "Descending",
+  "listItemCount": "{count} items",
+  "@listItemCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "listItemCountFiltered": "{filtered} / {total} items",
+  "@listItemCountFiltered": {
+    "placeholders": {
+      "filtered": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "filterKeyRequired": "Key is required when filter is enabled.",
+  "exportSuccess": "DB saved successfully.",
+  "aesKeyLengthError": "Key must be 32, 48, or 64 characters.",
+  "themeDark": "Switch to dark mode",
+  "themeLight": "Switch to light mode",
+  "listFilter": "Filter",
+  "listMerge": "Merge",
+  "listRemoveCollection": "Remove collection",
+  "listConfirmTitle": "Confirmation",
+  "listConfirmRemoveBody": "The displayed collection will be deleted from the database.\nAre you sure?",
+  "listOperationFailed": "The operation failed.",
+  "listEditJson": "Edit JSON",
+  "listInvalidJson": "Invalid JSON format",
+  "listCopied": "Copied to clipboard",
+  "@filter_section": {
+    "description": "------ Filter Dialog ------"
+  },
+  "dateFilterTitle": "Date/time filter",
+  "dateFilterKey": "Key",
+  "dateFilterKeyHint": "Select a key",
+  "dateFilterStart": "From",
+  "dateFilterEnd": "To",
+  "dateFilterClear": "Clear",
+  "dateFilterNotSet": "Not set",
+  "dateFilterUseLocalTime": "Use local time",
+  "filterTitle": "Filter",
+  "filterDescription": "Up to 2 filters can be added. Enabled filters are applied with AND condition.",
+  "filterKeyLabel": "key",
+  "filterValueLabel": "value",
+  "filterTypeError": "TypeError: The input could not be converted to the specified type.",
+  "filterOpRegex": "Regex",
+  "filterOpContains": "Contains",
+  "filterOpIn": "In",
+  "filterOpNotIn": "Not in",
+  "filterOpStartsWith": "Starts with",
+  "filterOpEndsWith": "Ends with",
+  "@query_section": {
+    "description": "------ Query View ------"
+  },
+  "queryLabel": "Query (JSON)",
+  "runQuery": "Run query",
+  "querySucceeded": "Query succeeded.",
+  "queryFailed": "Query failed.",
+  "@result_section": {
+    "description": "------ Result View ------"
+  },
+  "resultLabel": "Result",
+  "copyToClipboard": "Copy to clipboard",
+  "copiedToClipboard": "Copied to clipboard."
 }

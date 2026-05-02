@@ -5,15 +5,12 @@
   "changeLanguage": "English",
   "cancel": "キャンセル",
   "ok": "決定",
+  "close": "閉じる",
   "yes": "はい",
   "no": "いいえ",
   "enterQueryCode": "IDEで作成したクエリを「debugPrint(jsonEncode(query.toDict()))」した結果を貼り付けると実行できます。",
   "@dialog_section": {
     "description": "------ Dialog Labels ------"
-  },
-  "dialog_fileUTCSelectionTitle": "ファイル形式を選択",
-  "@dialog_fileUTCSelectionTitle": {
-    "description": "タイトル：ユーザーにタイトルをUTCでつけるか選択させるタイトル"
   },
   "dialog_fileFormatTitle": "ファイル形式を選択",
   "@dialog_fileFormatTitle": {
@@ -38,5 +35,98 @@
   "useMicroseconds": "マイクロ秒を使用",
   "useMicrosecondsSubtitle": "オンにすると、ファイル名にマイクロ秒(6桁)を含めます。",
   "useAesGcm": "AES-GCM で暗号化する",
-  "useAesGcmSubtitle": "オンにすると、AES-GCM を使用して暗号化して保存します。"
+  "useAesGcmSubtitle": "オンにすると、AES-GCM を使用して暗号化して保存します。",
+  "@main_section": {
+    "description": "------ メインページ ------"
+  },
+  "dbData": "DB データ",
+  "viewModeLabel": "表示モード:",
+  "viewModeList": "リスト",
+  "viewModeTree": "ツリー",
+  "viewModeQuery": "クエリ",
+  "importDb": "DB 読み込み",
+  "exportDb": "DB 書き出し",
+  "decryptFile": "ファイル復号",
+  "decryptResultTitle": "復号結果",
+  "noDbLoaded": "データベースが読み込まれていません。",
+  "importDbHint": ".dtdb ファイルをインポートして開始してください。",
+  "@tree_section": {
+    "description": "------ ツリービュー ------"
+  },
+  "treeSampling": "サンプリング:",
+  "treeTextLength": "テキスト長:",
+  "noData": "データなし。",
+  "@list_section": {
+    "description": "------ リストビュー ------"
+  },
+  "listTarget": "ターゲット:",
+  "listPerPage": "表示件数:",
+  "listPleaseSelect": "選択してください",
+  "listPleaseSelectCollection": "コレクションを選択してください。",
+  "listSearchHint": "検索（全キーを全文検索）",
+  "listSortBy": "ソート:",
+  "sortAscending": "昇順",
+  "sortDescending": "降順",
+  "listItemCount": "{count}件",
+  "@listItemCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "listItemCountFiltered": "{filtered} / {total}件",
+  "@listItemCountFiltered": {
+    "placeholders": {
+      "filtered": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "filterKeyRequired": "フィルターを有効にする場合はキーを入力してください。",
+  "exportSuccess": "DB を保存しました。",
+  "aesKeyLengthError": "キーは 32、48、64 文字のいずれかで入力してください。",
+  "themeDark": "ダークモードに切り替え",
+  "themeLight": "ライトモードに切り替え",
+  "listFilter": "フィルター",
+  "listMerge": "マージ",
+  "listRemoveCollection": "コレクション削除",
+  "listConfirmTitle": "確認",
+  "listConfirmRemoveBody": "表示中のコレクションをデータベースから削除します。\nよろしいですか？",
+  "listOperationFailed": "操作が失敗しました。",
+  "listEditJson": "JSON を編集",
+  "listInvalidJson": "JSON の形式が不正です",
+  "listCopied": "クリップボードにコピーしました",
+  "@filter_section": {
+    "description": "------ フィルターダイアログ ------"
+  },
+  "dateFilterTitle": "日時フィルター",
+  "dateFilterKey": "キー名",
+  "dateFilterKeyHint": "キーを選択",
+  "dateFilterStart": "開始",
+  "dateFilterEnd": "終了",
+  "dateFilterClear": "クリア",
+  "dateFilterNotSet": "未設定",
+  "dateFilterUseLocalTime": "ローカル時間で計算",
+  "filterTitle": "フィルター",
+  "filterDescription": "最大2つのフィルターを追加できます。有効化したフィルターはAnd条件で適用されます。",
+  "filterKeyLabel": "キー",
+  "filterValueLabel": "値",
+  "filterTypeError": "TypeError: 入力値を指定の型に変換できませんでした。",
+  "filterOpRegex": "正規表現",
+  "filterOpContains": "Contains",
+  "filterOpIn": "In",
+  "filterOpNotIn": "Not in",
+  "filterOpStartsWith": "前方一致",
+  "filterOpEndsWith": "後方一致",
+  "@query_section": {
+    "description": "------ クエリビュー ------"
+  },
+  "queryLabel": "クエリ (JSON)",
+  "runQuery": "クエリを実行",
+  "querySucceeded": "クエリが成功しました。",
+  "queryFailed": "クエリが失敗しました。",
+  "@result_section": {
+    "description": "------ 結果ビュー ------"
+  },
+  "resultLabel": "結果",
+  "copyToClipboard": "クリップボードにコピー",
+  "copiedToClipboard": "クリップボードにコピーしました。"
 }

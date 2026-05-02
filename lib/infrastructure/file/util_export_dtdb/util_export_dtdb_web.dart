@@ -25,7 +25,7 @@ class UtilExportDTDBImpl {
   /// * [data] : dtdb data.
   /// * [isLocalTime] : If false, save timestamp create from UTC time.
   /// * [useMicroSec] : If true, timestamp includes microseconds (6 digits). Otherwise milliseconds (3 digits).
-  static Future<void> exportDTDB(
+  static Future<bool> exportDTDB(
     List<int> data,
     bool isLocalTime,
     bool useMicroSec,
@@ -67,5 +67,6 @@ class UtilExportDTDBImpl {
     body?.callMethod('removeChild'.toJS, anchor);
     final JSObject urlObj = globalContext.getProperty('URL'.toJS) as JSObject;
     urlObj.callMethod('revokeObjectURL'.toJS, url.toJS);
+    return true;
   }
 }

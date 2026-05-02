@@ -20,8 +20,6 @@ dependencies:
   url_launcher: ^6.1.5
 
   # original packages
-  simple_widget_markup: any
-  simple_managers: any
   simple_locale: any
   file_state_manager: any
   delta_trace_db: 0.1.6
@@ -39,19 +37,6 @@ flutter:
   generate: true
   uses-material-design: true
 
-  assets:
-    - assets/layout/en/main_page/any/main_page.spwml
-    - assets/layout/en/main_page/any/db_view_how_to_use.spwml
-    - assets/layout/en/main_page/any/db_view_list.spwml
-    - assets/layout/en/main_page/any/db_view_log.spwml
-    - assets/layout/en/main_page/any/db_view_tree.spwml
-    - assets/layout/en/main_page/any/filter_dialog.spwml
-    - assets/layout/ja/main_page/any/main_page.spwml
-    - assets/layout/ja/main_page/any/db_view_how_to_use.spwml
-    - assets/layout/ja/main_page/any/db_view_list.spwml
-    - assets/layout/ja/main_page/any/db_view_log.spwml
-    - assets/layout/ja/main_page/any/db_view_tree.spwml
-    - assets/layout/ja/main_page/any/filter_dialog.spwml
 
   fonts:
     - family: Noto Sans JP
@@ -59,3 +44,11 @@ flutter:
         - asset: assets/fonts/Noto_Sans_JP/NotoSansJP-VariableFont_wght.ttf
         - asset: assets/fonts/Noto_Sans_JP/NotoSansJP-Regular.ttf
           weight: 400
+    - family: Noto Sans Mono
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Mono/static/NotoSansMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Noto_Sans_Mono/static/NotoSansMono-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Noto_Sans_Mono/static/NotoSansMono-Bold.ttf
+          weight: 700

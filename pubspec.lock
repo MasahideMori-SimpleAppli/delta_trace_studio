@@ -381,14 +381,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
-  simple_block_markup_language:
-    dependency: transitive
-    description:
-      name: simple_block_markup_language
-      sha256: "6a439fa6e1125140cdae989a05b3eea72c2d56db523c37f291739e5ae2055782"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.1"
   simple_lint:
     dependency: "direct dev"
     description:
@@ -405,22 +397,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  simple_managers:
-    dependency: "direct main"
-    description:
-      name: simple_managers
-      sha256: f159813a1f466d304d45e320378039b315ea86d61c5f9d03eb4613e804317f70
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.6"
-  simple_widget_markup:
-    dependency: "direct main"
-    description:
-      name: simple_widget_markup
-      sha256: "64d4cdb2b594040d5cffaecbb33e588d37008402248885d32b6814c6b3636659"
-      url: "https://pub.dev"
-    source: hosted
-    version: "46.6.0"
   sky_engine:
     dependency: transitive
     description: flutter

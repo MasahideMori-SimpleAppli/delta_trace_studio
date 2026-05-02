@@ -8,7 +8,7 @@ class UtilExportDTDBImpl {
   /// * [data] : dtdb data.
   /// * [isLocalTime] : If false, save timestamp created from UTC time.
   /// * [useMicroSec] : If true, timestamp includes microseconds (6 digits). Otherwise milliseconds (3 digits).
-  static Future<void> exportDTDB(
+  static Future<bool> exportDTDB(
     List<int> data,
     bool isLocalTime,
     bool useMicroSec,
@@ -43,8 +43,9 @@ class UtilExportDTDBImpl {
       acceptedTypeGroups: [typeGroup],
       confirmButtonText: 'Save',
     );
-    if (path == null) return;
+    if (path == null) return false;
     final file = File(path.path);
     await file.writeAsBytes(data);
+    return true;
   }
 }

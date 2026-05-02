@@ -8,72 +8,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_locale/simple_locale.dart';
 
-// DBを定義。
-// ローカルテスト用のDB。
 DeltaTraceDatabase localDB = DeltaTraceDatabase();
-// このセッションで適用が成功したクエリのリスト。
 final List<QueryWithTime> appliedQueries = [];
-// 状態管理用のDB。
-final stateDB = DeltaTraceDatabase();
-// db_view_listのリストの選択状態。
 String? selectedTarget;
+String? dbFileName;
+
+final queryTextController = TextEditingController();
+final queryResultNotifier = ValueNotifier<String>("Empty.");
+final aesGcmKeyController = TextEditingController();
+final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.light);
 
 void main() {
-  // test code
-  // debugPrint(
-  //   jsonEncode(
-  //     RawQueryBuilder.add(
-  //       target: "test",
-  //       rawAddData: [
-  //         {"test": "test", "a": "b"},
-  //       ],
-  //     ).build().toDict(),
-  //   ),
-  // );
-  //
   // localDB.executeQuery(
   //   RawQueryBuilder.add(
-  //     target: "users",
+  //     target: "server_logs",
   //     rawAddData: [
-  //       {"id": 0, "name": "test1"},
-  //       {"id": 1, "name": "test2"},
-  //       {"id": 2, "name": "test3"},
+  //       {"id": 1, "level": "INFO",  "service": "auth", "message": "User logged in",           "timestamp": "2026-04-10T08:30:00.000Z"},
+  //       {"id": 2, "level": "WARN",  "service": "api",  "message": "Slow response detected",   "timestamp": "2026-04-10T14:22:10.000Z"},
+  //       {"id": 3, "level": "ERROR", "service": "db",   "message": "Connection timeout",        "timestamp": "2026-04-15T02:15:33.000Z"},
+  //       {"id": 4, "level": "INFO",  "service": "auth", "message": "Token refreshed",           "timestamp": "2026-04-15T09:00:00.000Z"},
+  //       {"id": 5, "level": "INFO",  "service": "api",  "message": "Request processed",         "timestamp": "2026-04-20T11:45:00.000Z"},
+  //       {"id": 6, "level": "ERROR", "service": "auth", "message": "Invalid credentials",       "timestamp": "2026-04-20T16:30:00.000Z"},
+  //       {"id": 7, "level": "WARN",  "service": "db",   "message": "High memory usage",         "timestamp": "2026-04-28T03:10:00.000Z"},
+  //       {"id": 8, "level": "INFO",  "service": "api",  "message": "Cache cleared",             "timestamp": "2026-04-28T10:00:00.000Z"},
+  //       {"id": 9, "level": "ERROR", "service": "db",   "message": "Replication lag detected",  "timestamp": "2026-05-01T20:00:00.000Z"},
+  //       {"id": 10,"level": "INFO",  "service": "auth", "message": "User logged out",           "timestamp": "2026-05-02T08:00:00.000Z"},
   //     ],
   //   ).build(),
   // );
-  //
-  // localDB.executeQuery(
-  //   RawQueryBuilder.add(
-  //     target: "tickets",
-  //     rawAddData: [
-  //       {
-  //         "id": 0,
-  //         "name": "test1",
-  //         "class": "A",
-  //         "context": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
-  //       },
-  //       {
-  //         "id": 1,
-  //         "name": "test2",
-  //         "class": "B",
-  //         "context": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
-  //       },
-  //       {
-  //         "id": 2,
-  //         "name": "test3",
-  //         "class": "C",
-  //         "context": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
-  //       },
-  //     ],
-  //   ).build(),
-  // );
+  // selectedTarget = "server_logs";
+  // dbFileName = "sample_data (debug)";
 
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString(
+    final licenseJp = await rootBundle.loadString(
       'assets/fonts/Noto_Sans_JP/OFL.txt',
     );
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    yield LicenseEntryWithLineBreaks(['google_fonts'], licenseJp);
+    final licenseMono = await rootBundle.loadString(
+      'assets/fonts/Noto_Sans_Mono/OFL.txt',
+    );
+    yield LicenseEntryWithLineBreaks(['google_fonts'], licenseMono);
   });
   runApp(
     LocalizedApp(
@@ -88,17 +63,29 @@ class DeltaTraceStudioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      locale: LocaleManager.of(context)?.getLocaleForApp(),
-      title: 'DeltaTrace Studio',
-      theme: ThemeData(
-        fontFamily: "Noto Sans JP",
-        colorSchemeSeed: Colors.teal,
-        useMaterial3: true,
-      ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: const DeltaTraceStudioHome(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (_, themeMode, _) {
+        return MaterialApp(
+          locale: LocaleManager.of(context)?.getLocaleForApp(),
+          title: 'DeltaTrace Studio',
+          theme: ThemeData(
+            fontFamily: "Noto Sans JP",
+            colorSchemeSeed: Colors.teal,
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            fontFamily: "Noto Sans JP",
+            colorSchemeSeed: Colors.teal,
+            brightness: Brightness.dark,
+            useMaterial3: true,
+          ),
+          themeMode: themeMode,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const DeltaTraceStudioHome(),
+        );
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:simple_locale/simple_locale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:delta_trace_studio/application/f_app.dart';
+import 'package:delta_trace_studio/main.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 
 class UtilDrawer {
@@ -12,10 +13,15 @@ class UtilDrawer {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(color: Colors.teal),
-            child: const Text(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
+            child: Text(
               FApp.appName,
-              style: TextStyle(fontSize: 24, color: Colors.white),
+              style: TextStyle(
+                fontSize: 24,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
           ListTile(
@@ -44,6 +50,25 @@ class UtilDrawer {
                 }
                 Navigator.pop(context);
               }
+            },
+          ),
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: themeModeNotifier,
+            builder: (_, themeMode, _) {
+              final isDark = themeMode == ThemeMode.dark;
+              return ListTile(
+                leading: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                title: Text(
+                  isDark
+                      ? AppLocalizations.of(context)!.themeLight
+                      : AppLocalizations.of(context)!.themeDark,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  themeModeNotifier.value =
+                      isDark ? ThemeMode.light : ThemeMode.dark;
+                },
+              );
             },
           ),
           ListTile(
