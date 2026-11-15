@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/main.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/convert_type_flow.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_data.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_dialog.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filtered_item.dart';
@@ -286,6 +287,20 @@ class _DbViewListState extends State<DbViewList> {
               icon: const Icon(Icons.merge_type),
               tooltip: l10n.listMerge,
               onPressed: () => _merge(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.transform),
+              tooltip: l10n.listConvertType,
+              onPressed: selectedTarget == null
+                  ? null
+                  : () async {
+                      final changed = await convertTypeFlow(
+                        context,
+                        selectedTarget!,
+                        _collectKeys().toList()..sort(),
+                      );
+                      if (changed && mounted) setState(_searchFilter);
+                    },
             ),
             IconButton(
               icon: Icon(

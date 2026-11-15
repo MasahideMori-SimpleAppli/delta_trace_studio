@@ -1,4 +1,6 @@
 import 'package:delta_trace_db/delta_trace_db.dart';
+// ignore: implementation_imports
+import 'package:delta_trace_db/src/query/util_date_time.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_data.dart';
 import 'package:flutter/material.dart';
@@ -89,14 +91,34 @@ class _FilterDialogState extends State<FilterDialog> {
       value: EnumValueType.stringIgnoreCase_,
       child: Text('String (ignore case)'),
     ),
+    DropdownMenuItem(value: EnumValueType.decimal_, child: Text('Decimal')),
+    DropdownMenuItem(value: EnumValueType.rational_, child: Text('Rational')),
   ];
 
+  /// (en) Converts the input text to the value passed to the query node.
+  /// Date-times are parsed with the same strict rules as DeltaTraceDB,
+  /// and an input without a timezone is treated as UTC.
+  /// Decimal and rational inputs are validated and passed as strings,
+  /// because DeltaTraceDB treats numbers as conversion failures for these types.
+  ///
+  /// (ja) 入力文字列を、クエリノードに渡す値に変換します。
+  /// 日時は DeltaTraceDB と同じ厳格な規則で解析し、タイムゾーンのない入力は
+  /// UTC として扱います。
+  /// decimal と rational は形式を検査したうえで文字列のまま渡します。
+  /// DeltaTraceDB はこれらの型で数値を変換失敗として扱うためです。
+  ///
+  /// * [text] : The input text.
+  /// * [type] : The selected value type.
+  ///
+  /// Throws an exception if the text cannot be converted.
   dynamic _parseValue(String text, EnumValueType type) {
     switch (type) {
       case EnumValueType.auto_:
         throw ArgumentError();
       case EnumValueType.datetime_:
-        return DateTime.parse(text);
+        final DateTime? d = UtilDateTime.tryParse(text.trim());
+        if (d == null) throw FormatException(text);
+        return UtilDateTime.toUtc(d, 0);
       case EnumValueType.int_:
         return int.parse(text);
       case EnumValueType.floatStrict_:
@@ -106,6 +128,12 @@ class _FilterDialogState extends State<FilterDialog> {
         return bool.parse(text);
       case EnumValueType.string_:
       case EnumValueType.stringIgnoreCase_:
+        return text;
+      case EnumValueType.decimal_:
+        PortableDecimal.parse(text);
+        return text;
+      case EnumValueType.rational_:
+        PortableRational.parse(text);
         return text;
     }
   }

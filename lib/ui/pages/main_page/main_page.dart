@@ -5,6 +5,7 @@ import 'package:delta_trace_studio/infrastructure/encryption/aes_gcm.dart';
 import 'package:delta_trace_studio/infrastructure/encryption/enum_encryption_formats.dart';
 import 'package:delta_trace_studio/infrastructure/file/util_export_dtdb.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/csv_import_flow.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
 import 'package:file_selector/file_selector.dart';
@@ -108,6 +109,11 @@ class _MainPageState extends State<MainPage> {
             tooltip: _l10n.importDb,
             onPressed: _importDB,
           ),
+          IconButton(
+            icon: const Icon(Icons.table_view),
+            tooltip: _l10n.importCsv,
+            onPressed: _importCsv,
+          ),
           if (loaded)
             IconButton(
               icon: const Icon(Icons.download),
@@ -148,6 +154,12 @@ class _MainPageState extends State<MainPage> {
             icon: const Icon(Icons.upload_file),
             label: Text(_l10n.importDb),
             onPressed: _importDB,
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.table_view),
+            label: Text(_l10n.importCsv),
+            onPressed: _importCsv,
           ),
         ],
       ),
@@ -319,6 +331,24 @@ class _MainPageState extends State<MainPage> {
         );
       }
     }
+  }
+
+  /// (en) Imports a CSV file as a collection of the current database and
+  /// shows it. If no database is open, the current empty database is used
+  /// and shown as a new database.
+  ///
+  /// (ja) CSV ファイルを現在のデータベースのコレクションとして取り込み、表示します。
+  /// データベースを開いていない場合は、現在の空のデータベースを使い、
+  /// 新規データベースとして表示します。
+  Future<void> _importCsv() async {
+    final String? name = await importCsvFlow(context);
+    if (name == null || !mounted) return;
+    setState(() {
+      dbFileName ??= _l10n.newDbName;
+      dbVersion++;
+      selectedTarget = name;
+      _currentViewMode = EnumViewMode.listView;
+    });
   }
 
   Future<void> _exportDB() async {

@@ -49,6 +49,36 @@
   "decryptResultTitle": "Decrypted content",
   "noDbLoaded": "No database loaded.",
   "importDbHint": "Import a .dtdb file to get started.",
+  "importCsv": "Import CSV",
+  "csvCollectionNameTitle": "Target collection name",
+  "csvConfirmReplace": "Collection \"{name}\" already exists. Replace its contents with the CSV?",
+  "@csvConfirmReplace": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "csvImportSuccess": "Imported {count} items into \"{name}\".",
+  "@csvImportSuccess": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "name": {"type": "String"}
+    }
+  },
+  "csvHeaderError": "The header has an empty or duplicate column name.",
+  "csvColumnCountError": "Row {row} has a different number of columns from the header.",
+  "@csvColumnCountError": {
+    "placeholders": {
+      "row": {"type": "int"}
+    }
+  },
+  "csvFormatError": "The CSV format is invalid (the record starting at line {row}).",
+  "@csvFormatError": {
+    "placeholders": {
+      "row": {"type": "int"}
+    }
+  },
+  "csvEncodingError": "Only UTF-8 CSV files can be read. Save the file as UTF-8 and try again.",
+  "newDbName": "(New DB)",
   "@tree_section": {
     "description": "------ Tree View ------"
   },
@@ -87,6 +117,23 @@
   "listFilter": "Filter",
   "listMerge": "Merge",
   "listRemoveCollection": "Remove collection",
+  "listConvertType": "Convert key type",
+  "convertTypeTarget": "Target type",
+  "convertTypeNote": "If any value cannot be converted, nothing is changed. Keep exact values such as prices as strings and use Decimal when searching.",
+  "convertTypeEmptyNote": "Empty strings are converted to null.",
+  "convertTypeFailed": "{count} values could not be converted (first value: {value}). Nothing was changed.",
+  "@convertTypeFailed": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "value": {"type": "String"}
+    }
+  },
+  "convertTypeSuccess": "Converted {count} values.",
+  "@convertTypeSuccess": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "listConfirmTitle": "Confirmation",
   "listConfirmRemoveBody": "The displayed collection will be deleted from the database.\nAre you sure?",
   "listOperationFailed": "The operation failed.",
