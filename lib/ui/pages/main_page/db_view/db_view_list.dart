@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:delta_trace_db/delta_trace_db.dart';
 import 'package:delta_trace_studio/main.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/collection_actions.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/convert_type_flow.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/date_range_filter.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_data.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filter_dialog.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/filtered_item.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/merge_dialog.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/db_view/db_view_list/list_widgets.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/pagination_widget.dart';
-import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,33 +25,25 @@ class _DbViewListState extends State<DbViewList> {
   int _itemsPerPage = _defItemsPerPage;
   int _pageIndex = 0;
   final ScrollController _scCtrl = ScrollController();
-  final _tecEdit = TextEditingController();
   final _tecSearch = TextEditingController();
 
   final List<FilteredItem> _filteredItem = [];
   FilterData _filterData = FilterData(null, null);
   String _searchQuery = '';
 
-  String? _dateFilterKey;
-  DateTime? _dateFilterStart;
-  DateTime? _dateFilterEnd;
-  bool _dateFilterUseLocal = false;
+  DateRangeFilter _dateFilter = const DateRangeFilter();
 
   String? _sortKey;
   bool _sortAscending = true;
   FilterFormState? _filterFormState;
 
-  bool get _isDateFilterActive =>
-      _dateFilterKey != null &&
-      _dateFilterKey!.isNotEmpty &&
-      (_dateFilterStart != null || _dateFilterEnd != null);
+  bool get _isDateFilterActive => _dateFilter.isActive;
 
   AppLocalizations get _l10n => AppLocalizations.of(context)!;
 
   @override
   void dispose() {
     _scCtrl.dispose();
-    _tecEdit.dispose();
     _tecSearch.dispose();
     super.dispose();
   }
@@ -97,7 +89,7 @@ class _DbViewListState extends State<DbViewList> {
     final l10n = _l10n;
     final chips = <Widget>[];
     if (_searchQuery.isNotEmpty) {
-      chips.add(_activeChip(
+      chips.add(ActiveChip(
         label: '"$_searchQuery"',
         onDeleted: () {
           _tecSearch.clear();
@@ -109,7 +101,7 @@ class _DbViewListState extends State<DbViewList> {
       ));
     }
     if (_filterData.isFilterEnabled()) {
-      chips.add(_activeChip(
+      chips.add(ActiveChip(
         label: l10n.listFilter,
         onDeleted: () => setState(() {
           _filterData = FilterData(null, null);
@@ -119,60 +111,23 @@ class _DbViewListState extends State<DbViewList> {
       ));
     }
     if (_isDateFilterActive) {
-      chips.add(_activeChip(
-        label: '${l10n.dateFilterTitle}: $_dateFilterKey',
+      chips.add(ActiveChip(
+        label: '${l10n.dateFilterTitle}: ${_dateFilter.key}',
         onDeleted: () => setState(() {
-          _dateFilterKey = null;
-          _dateFilterStart = null;
-          _dateFilterEnd = null;
+          _dateFilter = DateRangeFilter(useLocal: _dateFilter.useLocal);
           _pageIndex = 0;
         }),
       ));
     }
 
     if (selectedTarget == null) {
-      return chips.isEmpty ? const SizedBox.shrink() : _chipsRow(chips, null);
+      return chips.isEmpty ? const SizedBox.shrink() : ChipsRow(chips: chips);
     }
     final total = localDB.collection(selectedTarget!).length;
     final countText = useFiltered
         ? l10n.listItemCountFiltered(_filteredItem.length, total)
         : l10n.listItemCount(total);
-    return _chipsRow(chips, countText);
-  }
-
-  Widget _chipsRow(List<Widget> chips, String? countText) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: chips.isEmpty
-                ? const SizedBox.shrink()
-                : Wrap(spacing: 6, runSpacing: 4, children: chips),
-          ),
-          if (countText != null)
-            Text(
-              countText,
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _activeChip({required String label, required VoidCallback onDeleted}) {
-    return Chip(
-      label: Text(label, style: const TextStyle(fontSize: 12)),
-      deleteIcon: const Icon(Icons.close, size: 14),
-      onDeleted: onDeleted,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      visualDensity: VisualDensity.compact,
-    );
+    return ChipsRow(chips: chips, countText: countText);
   }
 
   Widget _buildToolbar() {
@@ -249,7 +204,7 @@ class _DbViewListState extends State<DbViewList> {
                     : null,
               ),
               tooltip: l10n.dateFilterTitle,
-              onPressed: _showDateRangeFilterDialog,
+              onPressed: _openDateRangeFilter,
             ),
             _toolbarDivider(),
             Text(l10n.listSortBy),
@@ -358,10 +313,7 @@ class _DbViewListState extends State<DbViewList> {
     _filterData = FilterData(null, null);
     _searchQuery = '';
     _tecSearch.clear();
-    _dateFilterKey = null;
-    _dateFilterStart = null;
-    _dateFilterEnd = null;
-    _dateFilterUseLocal = false;
+    _dateFilter = const DateRangeFilter();
     _sortKey = null;
     _sortAscending = true;
     _filterFormState = null;
@@ -370,17 +322,6 @@ class _DbViewListState extends State<DbViewList> {
   bool _matchesSearch(Map<String, dynamic> item) {
     if (_searchQuery.isEmpty) return true;
     return jsonEncode(item).toLowerCase().contains(_searchQuery);
-  }
-
-  bool _matchesDateRange(Map<String, dynamic> item) {
-    if (!_isDateFilterActive) return true;
-    final val = item[_dateFilterKey!];
-    if (val == null) return false;
-    final dt = DateTime.tryParse(val.toString());
-    if (dt == null) return false;
-    if (_dateFilterStart != null && dt.isBefore(_dateFilterStart!)) return false;
-    if (_dateFilterEnd != null && dt.isAfter(_dateFilterEnd!)) return false;
-    return true;
   }
 
   void _searchFilter() {
@@ -404,7 +345,7 @@ class _DbViewListState extends State<DbViewList> {
               _filterData.node1!.evaluate(i) && _filterData.node2!.evaluate(i);
         }
       }
-      if (passesFilter && _matchesSearch(i) && _matchesDateRange(i)) {
+      if (passesFilter && _matchesSearch(i) && _dateFilter.matches(i)) {
         _filteredItem.add(FilteredItem(index, i));
       }
       index += 1;
@@ -437,205 +378,17 @@ class _DbViewListState extends State<DbViewList> {
     return sorted;
   }
 
-  String _formatDateTime(DateTime? dt) {
-    if (dt == null) return _l10n.dateFilterNotSet;
-    final y = dt.year.toString().padLeft(4, '0');
-    final mo = dt.month.toString().padLeft(2, '0');
-    final d = dt.day.toString().padLeft(2, '0');
-    final h = dt.hour.toString().padLeft(2, '0');
-    final mi = dt.minute.toString().padLeft(2, '0');
-    return '$y-$mo-$d $h:$mi';
-  }
-
-  Future<DateTime?> _pickDateTime(DateTime? initial, {required bool useLocal}) async {
-    final now = DateTime.now();
-    final initialLocal = initial?.toLocal();
-    final date = await showDatePicker(
-      context: context,
-      initialDate: initialLocal ?? now,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+  Future<void> _openDateRangeFilter() async {
+    final result = await showDateRangeFilterDialog(
+      context,
+      keys: _collectKeys().toList()..sort(),
+      initial: _dateFilter,
     );
-    if (date == null) return null;
-    if (!mounted) return null;
-    final time = await showTimePicker(
-      context: context,
-      initialTime: initialLocal != null
-          ? TimeOfDay.fromDateTime(initialLocal)
-          : TimeOfDay(hour: now.hour, minute: now.minute),
-    );
-    if (time == null) return null;
-    if (useLocal) {
-      return DateTime(date.year, date.month, date.day, time.hour, time.minute);
-    } else {
-      return DateTime.utc(date.year, date.month, date.day, time.hour, time.minute);
-    }
-  }
-
-  void _showDateRangeFilterDialog() {
-    final availableKeys = _collectKeys().toList()..sort();
-    String key = _dateFilterKey ?? '';
-    DateTime? start = _dateFilterStart;
-    DateTime? end = _dateFilterEnd;
-    bool useLocal = _dateFilterUseLocal;
-
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (dialogContext, setDialogState) {
-            return AlertDialog(
-              title: Text(_l10n.dateFilterTitle),
-              content: SizedBox(
-                width: 400,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: _l10n.dateFilterKey,
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: availableKeys.contains(key) ? key : null,
-                          hint: Text(_l10n.dateFilterKeyHint),
-                          isExpanded: true,
-                          isDense: true,
-                          items: availableKeys
-                              .map(
-                                (k) =>
-                                    DropdownMenuItem(value: k, child: Text(k)),
-                              )
-                              .toList(),
-                          onChanged: (v) {
-                            if (v != null) {
-                              setDialogState(() => key = v);
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    CheckboxListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        _l10n.dateFilterUseLocalTime,
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                      value: useLocal,
-                      onChanged: (v) => setDialogState(() {
-                        useLocal = v ?? false;
-                        start = null;
-                        end = null;
-                      }),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildDateTimeRow(
-                      label: _l10n.dateFilterStart,
-                      value: start,
-                      onPick: () async {
-                        final dt = await _pickDateTime(start, useLocal: useLocal);
-                        if (dt != null) setDialogState(() => start = dt);
-                      },
-                      onClear: () => setDialogState(() => start = null),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildDateTimeRow(
-                      label: _l10n.dateFilterEnd,
-                      value: end,
-                      onPick: () async {
-                        final dt = await _pickDateTime(end, useLocal: useLocal);
-                        if (dt != null) setDialogState(() => end = dt);
-                      },
-                      onClear: () => setDialogState(() => end = null),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext);
-                    setState(() {
-                      _dateFilterKey = null;
-                      _dateFilterStart = null;
-                      _dateFilterEnd = null;
-                      _dateFilterUseLocal = useLocal;
-                      _pageIndex = 0;
-                    });
-                  },
-                  child: Text(_l10n.dateFilterClear),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: Text(_l10n.cancel),
-                ),
-                ElevatedButton(
-                  onPressed: (key.isNotEmpty &&
-                          (start != null || end != null))
-                      ? () {
-                          Navigator.pop(dialogContext);
-                          setState(() {
-                            _dateFilterKey = key;
-                            _dateFilterStart = start;
-                            _dateFilterEnd = end;
-                            _dateFilterUseLocal = useLocal;
-                            _pageIndex = 0;
-                          });
-                        }
-                      : null,
-                  child: Text(_l10n.ok),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildDateTimeRow({
-    required String label,
-    required DateTime? value,
-    required VoidCallback onPick,
-    required VoidCallback onClear,
-  }) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 56,
-          child: Text(label, style: const TextStyle(fontSize: 13)),
-        ),
-        Expanded(
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              alignment: Alignment.centerLeft,
-            ),
-            onPressed: onPick,
-            child: Text(
-              _formatDateTime(value),
-              style: const TextStyle(fontFamily: 'Noto Sans Mono', fontSize: 13),
-            ),
-          ),
-        ),
-        if (value != null)
-          IconButton(
-            icon: const Icon(Icons.clear, size: 18),
-            onPressed: onClear,
-          )
-        else
-          const SizedBox(width: 40),
-      ],
-    );
+    if (result == null) return;
+    setState(() {
+      _dateFilter = result;
+      _pageIndex = 0;
+    });
   }
 
   Widget _toolbarDivider() => Container(
@@ -691,7 +444,7 @@ class _DbViewListState extends State<DbViewList> {
     return items.map((item) {
       final itemNumInDb = item.index + 1;
       final jsonStr = const JsonEncoder.withIndent('  ').convert(item.item);
-      return _buildItemCard(
+      return ItemCard(
         itemNum: itemNumInDb,
         jsonStr: jsonStr,
         onEdit: () => _editItem(target, item.index, jsonStr),
@@ -722,7 +475,7 @@ class _DbViewListState extends State<DbViewList> {
       final originalIndex = entry.$1;
       final item = entry.$2;
       final jsonStr = const JsonEncoder.withIndent('  ').convert(item);
-      return _buildItemCard(
+      return ItemCard(
         itemNum: originalIndex + 1,
         jsonStr: jsonStr,
         onEdit: () => _editItem(target, originalIndex, jsonStr),
@@ -731,109 +484,12 @@ class _DbViewListState extends State<DbViewList> {
     }).toList();
   }
 
-  Widget _buildItemCard({
-    required int itemNum,
-    required String jsonStr,
-    required VoidCallback onEdit,
-    required VoidCallback onCopy,
-  }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '#$itemNum',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.edit, size: 18),
-                  visualDensity: VisualDensity.compact,
-                  onPressed: onEdit,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.copy, size: 18),
-                  visualDensity: VisualDensity.compact,
-                  onPressed: onCopy,
-                ),
-              ],
-            ),
-            const Divider(height: 8),
-            SelectableText(
-              jsonStr,
-              style: const TextStyle(fontFamily: 'Noto Sans Mono', fontSize: 13),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _editItem(String target, int index, String jsonStr) async {
-    final l10n = _l10n;
-    _tecEdit.text = jsonStr;
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        String? jsonError;
-        return StatefulBuilder(
-          builder: (dialogContext, setDialogState) {
-            return AlertDialog(
-              title: Text(l10n.listEditJson),
-              content: SizedBox(
-                width: 600,
-                height: 400,
-                child: TextField(
-                  controller: _tecEdit,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    errorText: jsonError,
-                  ),
-                  onChanged: (_) {
-                    if (jsonError != null) {
-                      setDialogState(() => jsonError = null);
-                    }
-                  },
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: Text(l10n.cancel),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    try {
-                      final newItem =
-                          jsonDecode(_tecEdit.text) as Map<String, dynamic>;
-                      Navigator.pop(dialogContext);
-                      setState(() {
-                        localDB.collection(target).raw[index] = newItem;
-                      });
-                    } catch (_) {
-                      setDialogState(() => jsonError = l10n.listInvalidJson);
-                    }
-                  },
-                  child: Text(l10n.ok),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
+    final newItem = await showEditItemDialog(context, jsonStr);
+    if (newItem == null || !mounted) return;
+    setState(() {
+      localDB.collection(target).raw[index] = newItem;
+    });
   }
 
   void _copyToClipboard(String text) {
@@ -844,117 +500,18 @@ class _DbViewListState extends State<DbViewList> {
   }
 
   Future<void> _merge() async {
-    final l10n = _l10n;
-    final source = [...localDB.raw.keys].where((x) => x != selectedTarget);
-    final MergeQueryParams? mqp = await showMergeQueryParamsDialog(
-      context,
-      initial: MergeQueryParams(
-        base: selectedTarget ?? "",
-        source: source.toList(),
-        relationKey: "",
-        sourceKeys: [],
-        output: "output_collection_name",
-        dslTmp: {},
-        serialBase: selectedTarget,
-      ),
-    );
-    if (mqp != null) {
-      final now = DateTime.now().toUtc();
-      final Query mergeQuery = RawQueryBuilder.merge(
-        mergeQueryParams: mqp,
-        cause: Cause(
-          who: Actor(EnumActorType.system, "DeltaTraceStudio"),
-          when: TemporalTrace(
-            nodes: [
-              TimestampNode(timestamp: now, location: "DeltaTraceStudio App"),
-            ],
-          ),
-          what: "Merging collections is performed through user UI actions.",
-          why: "Run merge function.",
-          from: "DeltaTraceStudio App",
-        ),
-      ).build();
-      final r = localDB.executeQuery(mergeQuery);
-      if (r.isSuccess) {
-        setState(() {
-          selectedTarget = mqp.output;
-          appliedQueries.add(QueryWithTime(mergeQuery.toDict(), now));
-        });
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.listOperationFailed),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
-      }
-    }
+    final String? output = await mergeFlow(context, selectedTarget);
+    if (output == null || !mounted) return;
+    setState(() => selectedTarget = output);
   }
 
-  void _removeCollection() {
-    final l10n = _l10n;
-    showDialog(
-      context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          title: Text(l10n.listConfirmTitle),
-          content: Text(l10n.listConfirmRemoveBody),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text(l10n.no),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                setState(() {
-                  if (selectedTarget != null) {
-                    final now = DateTime.now().toUtc();
-                    final removeQuery = RawQueryBuilder.removeCollection(
-                      target: selectedTarget!,
-                      cause: Cause(
-                        who: Actor(EnumActorType.system, "DeltaTraceStudio"),
-                        when: TemporalTrace(
-                          nodes: [
-                            TimestampNode(
-                              timestamp: now,
-                              location: "DeltaTraceStudio App",
-                            ),
-                          ],
-                        ),
-                        what:
-                            "removeCollections is performed through user UI actions.",
-                        why: "Run removeCollection function.",
-                        from: "DeltaTraceStudio App",
-                      ),
-                    ).build();
-                    final r = localDB.executeQuery(removeQuery);
-                    if (r.isSuccess) {
-                      appliedQueries.add(
-                        QueryWithTime(removeQuery.toDict(), now),
-                      );
-                      selectedTarget = null;
-                      _resetFilter();
-                    } else {
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.listOperationFailed),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    }
-                  }
-                });
-              },
-              child: Text(l10n.yes),
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> _removeCollection() async {
+    if (!await removeCollectionFlow(context, selectedTarget!) || !mounted) {
+      return;
+    }
+    setState(() {
+      selectedTarget = null;
+      _resetFilter();
+    });
   }
 }

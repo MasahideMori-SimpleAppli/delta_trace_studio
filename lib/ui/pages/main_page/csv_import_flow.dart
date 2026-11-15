@@ -112,16 +112,16 @@ Future<String?> _showCollectionNameDialog(
   AppLocalizations l10n,
   String initial,
 ) {
-  final ctrl = TextEditingController(text: initial);
+  String name = initial;
   return showDialog<String>(
     context: context,
     builder: (dialogContext) => StatefulBuilder(
       builder: (dialogContext, setState) => AlertDialog(
         title: Text(l10n.csvCollectionNameTitle),
-        content: TextField(
-          controller: ctrl,
+        content: TextFormField(
+          initialValue: initial,
           autofocus: true,
-          onChanged: (_) => setState(() {}),
+          onChanged: (v) => setState(() => name = v),
         ),
         actions: [
           TextButton(
@@ -129,15 +129,15 @@ Future<String?> _showCollectionNameDialog(
             child: Text(l10n.cancel),
           ),
           ElevatedButton(
-            onPressed: ctrl.text.isEmpty
+            onPressed: name.isEmpty
                 ? null
-                : () => Navigator.pop(dialogContext, ctrl.text),
+                : () => Navigator.pop(dialogContext, name),
             child: Text(l10n.ok),
           ),
         ],
       ),
     ),
-  ).whenComplete(ctrl.dispose);
+  );
 }
 
 /// (en) Asks the user whether to replace an existing collection.

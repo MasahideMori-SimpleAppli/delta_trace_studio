@@ -8,9 +8,9 @@ import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/csv_import_flow.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/db_view/enum_view_mode.dart';
+import 'package:delta_trace_studio/ui/pages/main_page/main_page_dialogs.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:delta_trace_studio/main.dart';
 
@@ -22,9 +22,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  bool _isLocalTime = true;
-  bool _useMicroseconds = false;
-  bool _useAesGcm = false;
+  final ExportOptions _exportOptions = ExportOptions();
 
   EnumViewMode _currentViewMode = EnumViewMode.listView;
 
@@ -172,13 +170,13 @@ class _MainPageState extends State<MainPage> {
       if (file == null) return;
       final bytes = await file.readAsBytes();
       if (!mounted) return;
-      final String? hexKey = await _showHEXKeyInputDialog();
+      final String? hexKey = await showHEXKeyInputDialog(context);
       if (hexKey == null || !mounted) return;
       try {
         final decrypted = AesGcm().decryptJson(bytes, hexKey);
         final pretty = const JsonEncoder.withIndent('  ').convert(decrypted);
         if (!mounted) return;
-        await _showDecryptResultDialog(file.name, pretty);
+        await showDecryptResultDialog(context, file.name, pretty);
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -201,76 +199,6 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<void> _showDecryptResultDialog(String fileName, String content) {
-    return showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(_l10n.decryptResultTitle),
-          content: SizedBox(
-            width: 640,
-            height: 480,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  fileName,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withAlpha(160),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(12),
-                      child: SelectableText(
-                        content,
-                        style: const TextStyle(
-                          fontFamily: 'Noto Sans Mono',
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton.icon(
-              icon: const Icon(Icons.copy, size: 18),
-              label: Text(_l10n.copyToClipboard),
-              onPressed: () async {
-                await Clipboard.setData(ClipboardData(text: content));
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(_l10n.copiedToClipboard),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                }
-              },
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(_l10n.close),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _importDB() async {
     try {
       const XTypeGroup typeGroup = XTypeGroup(
@@ -281,7 +209,7 @@ class _MainPageState extends State<MainPage> {
       if (file == null) return;
       final bytes = await file.readAsBytes();
       if (!mounted) return;
-      final EnumEncryptionFormats? format = await _showLoadFormatDialog();
+      final EnumEncryptionFormats? format = await showLoadFormatDialog(context);
       if (format == null) return;
       try {
         if (format == EnumEncryptionFormats.noEncryption) {
@@ -299,7 +227,7 @@ class _MainPageState extends State<MainPage> {
           });
         } else if (format == EnumEncryptionFormats.aesGcm) {
           if (!mounted) return;
-          final String? hexKey = await _showHEXKeyInputDialog();
+          final String? hexKey = await showHEXKeyInputDialog(context);
           if (hexKey != null) {
             final decrypted = AesGcm().decryptJson(bytes, hexKey);
             final newDB = DeltaTraceDatabase.fromDict(decrypted);
@@ -353,12 +281,12 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> _exportDB() async {
     try {
-      final result = await _showExportOptionsDialog();
-      if (result == null) return;
+      if (!await showExportOptionsDialog(context, _exportOptions)) return;
+      final result = _exportOptions;
       bool saved;
       if (result.useAesGcm) {
         if (!mounted) return;
-        final String? hexKey = await _showHEXKeyInputDialog();
+        final String? hexKey = await showHEXKeyInputDialog(context);
         if (hexKey == null) return;
         saved = await UtilExportDTDB.exportDTDB(
           AesGcm().encryptJson(localDB.toDict(), hexKey).toList(),
@@ -390,160 +318,5 @@ class _MainPageState extends State<MainPage> {
         );
       }
     }
-  }
-
-  Future<({bool isLocalTime, bool useMicroseconds, bool useAesGcm})?>
-  _showExportOptionsDialog() {
-    return showDialog<({bool isLocalTime, bool useMicroseconds, bool useAesGcm})>(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (dialogContext, setDialogState) {
-            return AlertDialog(
-              title: Text(_l10n.exportDatabaseTitle),
-              content: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 600,
-                  minWidth: 320,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(_l10n.exportDatabaseDescription),
-                    const SizedBox(height: 16),
-                    SwitchListTile(
-                      title: Text(_l10n.useLocalTime),
-                      subtitle: Text(_l10n.useLocalTimeSubtitle),
-                      value: _isLocalTime,
-                      onChanged: (v) =>
-                          setDialogState(() => _isLocalTime = v),
-                    ),
-                    SwitchListTile(
-                      title: Text(_l10n.useMicroseconds),
-                      subtitle: Text(_l10n.useMicrosecondsSubtitle),
-                      value: _useMicroseconds,
-                      onChanged: (v) =>
-                          setDialogState(() => _useMicroseconds = v),
-                    ),
-                    SwitchListTile(
-                      title: Text(_l10n.useAesGcm),
-                      subtitle: Text(_l10n.useAesGcmSubtitle),
-                      value: _useAesGcm,
-                      onChanged: (v) =>
-                          setDialogState(() => _useAesGcm = v),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, null),
-                  child: Text(_l10n.cancel),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext, (
-                      isLocalTime: _isLocalTime,
-                      useMicroseconds: _useMicroseconds,
-                      useAesGcm: _useAesGcm,
-                    ));
-                  },
-                  child: Text(_l10n.ok),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<EnumEncryptionFormats?> _showLoadFormatDialog() {
-    return showDialog<EnumEncryptionFormats>(
-      context: context,
-      builder: (dialogContext) {
-        return SimpleDialog(
-          title: Text(_l10n.dialog_fileFormatTitle),
-          children: [
-            SimpleDialogOption(
-              child: Text(_l10n.dialog_loadJson),
-              onPressed: () => Navigator.pop(
-                dialogContext,
-                EnumEncryptionFormats.noEncryption,
-              ),
-            ),
-            SimpleDialogOption(
-              child: Text(_l10n.dialog_decryptAesGcm),
-              onPressed: () => Navigator.pop(
-                dialogContext,
-                EnumEncryptionFormats.aesGcm,
-              ),
-            ),
-            SimpleDialogOption(
-              child: Text(_l10n.cancel),
-              onPressed: () => Navigator.pop(dialogContext, null),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<String?> _showHEXKeyInputDialog() {
-    bool obscure = true;
-    return showDialog<String>(
-      context: context,
-      builder: (dialogContext) {
-        String? keyError;
-        return StatefulBuilder(
-          builder: (dialogContext, setDialogState) {
-            return AlertDialog(
-              title: Text(_l10n.dialog_aesGcmTitle),
-              content: TextField(
-                controller: aesGcmKeyController,
-                obscureText: obscure,
-                decoration: InputDecoration(
-                  labelText: "Hex key: 32 / 48 / 64 chars (= 16 / 24 / 32 bytes)",
-                  errorText: keyError,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscure ? Icons.visibility_off : Icons.visibility,
-                    ),
-                    onPressed: () =>
-                        setDialogState(() => obscure = !obscure),
-                  ),
-                ),
-                onChanged: (_) {
-                  if (keyError != null) {
-                    setDialogState(() => keyError = null);
-                  }
-                },
-                maxLines: 1,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, null),
-                  child: Text(_l10n.cancel),
-                ),
-                TextButton(
-                  onPressed: () {
-                    final key = aesGcmKeyController.text.trim();
-                    if (key.isNotEmpty &&
-                        key.length != 32 &&
-                        key.length != 48 &&
-                        key.length != 64) {
-                      setDialogState(() => keyError = _l10n.aesKeyLengthError);
-                      return;
-                    }
-                    Navigator.pop(dialogContext, key);
-                  },
-                  child: Text(_l10n.ok),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 }
