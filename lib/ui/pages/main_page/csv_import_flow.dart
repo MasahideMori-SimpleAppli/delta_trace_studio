@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:delta_trace_db/delta_trace_db.dart';
-import 'package:delta_trace_studio/infrastructure/file/util_import_csv.dart';
 import 'package:delta_trace_studio/main.dart';
 import 'package:delta_trace_studio/src/generated/i18n/app_localizations.dart';
 import 'package:delta_trace_studio/ui/pages/main_page/query/query_with_time.dart';
@@ -9,14 +8,20 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
 /// (en) Lets the user pick a CSV file and adds it to the current database
-/// as a collection. Each row becomes an item of {header: cell text}.
-/// If the collection already exists, its contents are replaced after
-/// confirmation. The query is recorded in the applied query history.
+/// as a collection with the addCsv query of DeltaTraceDB. Each row becomes
+/// an item of {header: cell text}. The CSV is checked with UtilCsv first,
+/// so that errors can be shown in the user's language.
+/// If the collection already exists, its contents are replaced with the
+/// clearAddCsv query after confirmation. The query, which contains the CSV
+/// text, is recorded in the applied query history.
 ///
 /// (ja) ユーザーが選んだ CSV ファイルを、現在のデータベースにコレクションとして
-/// 追加します。各行は {ヘッダー: セルの文字列} の要素になります。
-/// 同名のコレクションがある場合は、確認のうえで内容を置き換えます。
-/// 実行したクエリは適用済みクエリの履歴に記録します。
+/// DeltaTraceDB の addCsv クエリで追加します。各行は {ヘッダー: セルの文字列} の
+/// 要素になります。エラーを利用者の言語で表示できるように、先に UtilCsv で
+/// CSV を検査します。
+/// 同名のコレクションがある場合は、確認のうえで clearAddCsv クエリで
+/// 内容を置き換えます。実行したクエリ（CSV の文字列を含む）は、
+/// 適用済みクエリの履歴に記録します。
 ///
 /// * [context] : The context used to show dialogs and messages.
 ///
@@ -32,16 +37,16 @@ Future<String?> importCsvFlow(BuildContext context) async {
   const XTypeGroup typeGroup = XTypeGroup(label: 'CSV', extensions: ['csv']);
   final XFile? file = await openFile(acceptedTypeGroups: [typeGroup]);
   if (file == null || !context.mounted) return null;
+  final String text;
   final List<Map<String, dynamic>> items;
   try {
-    final String text;
     try {
       text = utf8.decode(await file.readAsBytes());
     } on FormatException {
       if (context.mounted) showMessage(l10n.csvEncodingError);
       return null;
     }
-    items = UtilImportCsv.toItems(text);
+    items = UtilCsv.toItems(text);
   } on CsvFormatError catch (e) {
     if (context.mounted) showMessage(_csvErrorText(l10n, e));
     return null;
@@ -50,8 +55,15 @@ Future<String?> importCsvFlow(BuildContext context) async {
     return null;
   }
   if (!context.mounted) return null;
-  final defaultName = file.name.replaceFirst(RegExp(r'\.csv$', caseSensitive: false), '');
-  final String? name = await _showCollectionNameDialog(context, l10n, defaultName);
+  final defaultName = file.name.replaceFirst(
+    RegExp(r'\.csv$', caseSensitive: false),
+    '',
+  );
+  final String? name = await _showCollectionNameDialog(
+    context,
+    l10n,
+    defaultName,
+  );
   if (name == null || !context.mounted) return null;
   final exists = localDB.findCollection(name) != null;
   if (exists && !await _confirmReplace(context, l10n, name)) return null;
@@ -67,8 +79,12 @@ Future<String?> importCsvFlow(BuildContext context) async {
     from: "DeltaTraceStudio App",
   );
   final Query q = exists
-      ? RawQueryBuilder.clearAdd(target: name, rawAddData: items, cause: cause).build()
-      : RawQueryBuilder.add(target: name, rawAddData: items, cause: cause).build();
+      ? QueryBuilder.clearAddCsv(
+          target: name,
+          csvText: text,
+          cause: cause,
+        ).build()
+      : QueryBuilder.addCsv(target: name, csvText: text, cause: cause).build();
   final r = localDB.executeQuery(q);
   if (!r.isSuccess) {
     if (context.mounted) showMessage(l10n.listOperationFailed);

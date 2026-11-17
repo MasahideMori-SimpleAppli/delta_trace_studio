@@ -1,7 +1,7 @@
 /// アプリケーション全体で使用するフィールド定義
 class FApp {
   static const String appName = "DeltaTraceStudio";
-  static const String appVersion = "1.1.0";
+  static const String appVersion = "1.1.1";
   static const String appLegalese = "2026 Masahide Mori";
-  static const String lastUpdate = "Last update：2026/11/15 (Sun)";
+  static const String lastUpdate = "Last update：2026/11/18 (Wed)";
 }
