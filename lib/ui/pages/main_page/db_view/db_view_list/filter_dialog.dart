@@ -116,7 +116,7 @@ class _FilterDialogState extends State<FilterDialog> {
       case EnumValueType.auto_:
         throw ArgumentError();
       case EnumValueType.datetime_:
-        final DateTime? d = UtilDateTime.tryParse(text.trim());
+        final NaiveOrUtc? d = UtilDateTime.tryParse(text.trim());
         if (d == null) throw FormatException(text);
         return UtilDateTime.toUtc(d, 0);
       case EnumValueType.int_:
